@@ -1,0 +1,5 @@
+Server:
+  Url: http://192.167.167.167:9999/ping?last=
+  Secret: 5H3GnAiCYpwHJIU
+MustHttps: true
+
