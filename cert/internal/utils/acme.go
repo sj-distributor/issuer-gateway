@@ -10,6 +10,7 @@ import (
 	"github.com/go-acme/lego/v4/lego"
 	"github.com/go-acme/lego/v4/registration"
 	"log"
+	"net/http"
 )
 
 // AcmeAccount acme account
@@ -44,6 +45,7 @@ func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resour
 	config := lego.NewConfig(&acmeAccount)
 
 	config.CADirURL = lego.LEDirectoryStaging
+	config.HTTPClient = &http.Client{}
 
 	client, err := lego.NewClient(config)
 	log.Println("client-----", client, err)
