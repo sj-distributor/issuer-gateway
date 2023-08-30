@@ -32,7 +32,7 @@ func main() {
 	engine.GET("/cert", func(c *gin.Context) {
 
 		certificate, err := utils.ReqCertificate(configs.C.Acme.Email, "anson.itst.cn")
-
+		log.Println(certificate, err)
 		c.JSON(200, gin.H{
 			"cert": certificate,
 			"err":  err,

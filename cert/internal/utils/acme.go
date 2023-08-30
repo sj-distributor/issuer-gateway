@@ -10,6 +10,7 @@ import (
 	"github.com/go-acme/lego/v4/challenge/http01"
 	"github.com/go-acme/lego/v4/lego"
 	"github.com/go-acme/lego/v4/registration"
+	"log"
 )
 
 // AcmeAccount acme account
@@ -63,11 +64,11 @@ func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resour
 	}
 	acmeAccount.Registration = reg
 
-	fmt.Printf("%#v\n", reg)
-	
-	fmt.Println("-")
+	log.Println(fmt.Printf("%#v\n", reg))
 
-	fmt.Println("-- 开始申请证书 --")
+	log.Println(fmt.Println("-"))
+
+	log.Println(fmt.Println("-- 开始申请证书 --"))
 	// 创建证书
 	request := certificate.ObtainRequest{
 		Domains: domains,
@@ -77,8 +78,8 @@ func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resour
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("-- 开始申请结束 --")
+	log.Println(fmt.Println("-- 开始申请结束 --"))
 
-	fmt.Printf("%#v\n", certificates)
+	log.Println(fmt.Printf("%#v\n", certificates))
 	return certificates, nil
 }
