@@ -2,11 +2,9 @@ package utils
 
 import (
 	"crypto"
-	"crypto/ecdsa"
-	"crypto/elliptic"
 	"crypto/rand"
+	"crypto/rsa"
 	"fmt"
-	"github.com/go-acme/lego/v4/certcrypto"
 	"github.com/go-acme/lego/v4/certificate"
 	"github.com/go-acme/lego/v4/challenge/http01"
 	"github.com/go-acme/lego/v4/lego"
@@ -33,7 +31,7 @@ func (u *AcmeAccount) GetPrivateKey() crypto.PrivateKey {
 
 func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resource, error) {
 
-	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +44,6 @@ func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resour
 	config := lego.NewConfig(&acmeAccount)
 
 	config.CADirURL = lego.LEDirectoryStaging
-	config.Certificate.KeyType = certcrypto.RSA2048
 
 	client, err := lego.NewClient(config)
 	log.Println("client-----", client, err)
