@@ -6,6 +6,7 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 	"fmt"
+	"github.com/go-acme/lego/v4/certcrypto"
 	"github.com/go-acme/lego/v4/certificate"
 	"github.com/go-acme/lego/v4/challenge/http01"
 	"github.com/go-acme/lego/v4/lego"
@@ -45,20 +46,26 @@ func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resour
 	config := lego.NewConfig(&acmeAccount)
 
 	config.CADirURL = lego.LEDirectoryStaging
+	config.Certificate.KeyType = certcrypto.RSA2048
 
 	client, err := lego.NewClient(config)
+	log.Println("client-----", client, err)
+
 	if err != nil {
 		return nil, err
 	}
 
 	// 设置http01验证
 	err = client.Challenge.SetHTTP01Provider(http01.NewProviderServer("", "80"))
+	log.Println("SetHTTP01Provider-----", err)
+
 	if err != nil {
 		return nil, err
 	}
 
 	//  注册用户
 	reg, err := client.Registration.Register(registration.RegisterOptions{TermsOfServiceAgreed: true})
+	log.Println("Registration-----", reg, err)
 	if err != nil {
 		return nil, err
 	}
