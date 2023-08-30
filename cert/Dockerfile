@@ -20,4 +20,4 @@ COPY --from=builder /app/etc/config.yaml /app/etc/config.yaml
 
 EXPOSE 9527
 
-CMD ["./cert", "-f", "etc/config.yaml"]
+CMD ["./cert", "-f", "/app/etc/config.yaml"]

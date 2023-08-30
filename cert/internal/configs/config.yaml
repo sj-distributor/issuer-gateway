@@ -3,8 +3,6 @@ Mysql:
   Migration:
     Path: "/Users/gzf/cert-gateway/cert/init/database/migration"
     Database: "cert-gateway"
-
 Env: debug
-
 Acme:
   Email: nsgzfei@gmail.com
