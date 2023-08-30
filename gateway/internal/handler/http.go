@@ -2,7 +2,7 @@ package handler
 
 import (
 	"cert-gateway/gateway/internal/configs"
-	"cert-gateway/utils"
+	"cert-gateway/gateway/internal/utils"
 	"log"
 	"net/http"
 	"time"

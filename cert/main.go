@@ -2,7 +2,7 @@ package main
 
 import (
 	"cert-gateway/cert/internal/configs"
-	"cert-gateway/utils"
+	"cert-gateway/cert/internal/utils"
 	"flag"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -11,9 +11,9 @@ import (
 	"time"
 )
 
-func main() {
+var configFile = flag.String("f", "internal/configs/config.yaml", "the config file")
 
-	var configFile = flag.String("f", "internal/configs/config.yaml", "the config file")
+func main() {
 
 	utils.MustLoad(configFile, configs.C)
 
