@@ -4,12 +4,14 @@ import (
 	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
+	"crypto/tls"
 	"fmt"
 	"github.com/go-acme/lego/v4/certificate"
 	"github.com/go-acme/lego/v4/challenge/http01"
 	"github.com/go-acme/lego/v4/lego"
 	"github.com/go-acme/lego/v4/registration"
 	"log"
+	"net/http"
 )
 
 // AcmeAccount acme account
@@ -44,6 +46,10 @@ func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resour
 	config := lego.NewConfig(&acmeAccount)
 
 	config.CADirURL = lego.LEDirectoryStaging
+	
+	httpClient := &http.Client{}
+	httpClient.Transport = &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
+	config.HTTPClient = &http.Client{}
 
 	client, err := lego.NewClient(config)
 	log.Println("client-----", client, err)
