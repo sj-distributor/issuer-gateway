@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/go-acme/lego/v4/certificate"
 	"github.com/go-acme/lego/v4/challenge/http01"
-	"github.com/go-acme/lego/v4/challenge/tlsalpn01"
 	"github.com/go-acme/lego/v4/lego"
 	"github.com/go-acme/lego/v4/registration"
 	"log"
@@ -65,11 +64,11 @@ func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resour
 		return nil, err
 	}
 
-	err = client.Challenge.SetTLSALPN01Provider(tlsalpn01.NewProviderServer("", "443"))
-	log.Println("SetTLSALPN01Provider-----", err)
-	if err != nil {
-		log.Fatal(err)
-	}
+	//err = client.Challenge.SetTLSALPN01Provider(tlsalpn01.NewProviderServer("", "443"))
+	//log.Println("SetTLSALPN01Provider-----", err)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
 
 	//  注册用户
 	reg, err := client.Registration.Register(registration.RegisterOptions{TermsOfServiceAgreed: true})
