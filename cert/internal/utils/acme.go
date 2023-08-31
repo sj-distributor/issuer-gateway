@@ -57,7 +57,7 @@ func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resour
 	}
 
 	// 设置http01验证
-	err = client.Challenge.SetHTTP01Provider(http01.NewProviderServer("", "80"))
+	err = client.Challenge.SetHTTP01Provider(http01.NewProviderServer("", "19860"))
 	log.Println("SetHTTP01Provider-----", err)
 
 	if err != nil {
