@@ -82,6 +82,9 @@ func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resour
 		Domains: domains,
 		Bundle:  true,
 	}
+
+	log.Println("request", request)
+	
 	certificates, err := client.Certificate.Obtain(request)
 	if err != nil {
 		return nil, err
