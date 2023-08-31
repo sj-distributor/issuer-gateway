@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"cert-gateway/cert/internal/configs"
 	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
@@ -43,7 +44,11 @@ func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resour
 
 	config := lego.NewConfig(&acmeAccount)
 
-	config.CADirURL = lego.LEDirectoryStaging
+	config.CADirURL = lego.LEDirectoryProduction
+	if configs.C.Acme.Env == "debug" {
+		config.CADirURL = lego.LEDirectoryStaging
+	}
+
 	//
 	//httpClient := &http.Client{}
 	//httpClient.Transport = &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}

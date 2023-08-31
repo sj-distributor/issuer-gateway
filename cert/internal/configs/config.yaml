@@ -6,3 +6,4 @@ Mysql:
 Env: debug
 Acme:
   Email: nsgzfei@gmail.com
+  Env: debug

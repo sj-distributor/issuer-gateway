@@ -13,5 +13,6 @@ type Config struct {
 	Env  string
 	Acme struct {
 		Email string
+		Env   string
 	}
 }
