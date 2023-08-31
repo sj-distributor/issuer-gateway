@@ -20,6 +20,6 @@ WORKDIR /app
 COPY --from=builder /etc/cert /app/cert
 COPY --from=builder /app/internal/configs/config.yaml /app/internal/configs/config.yaml
 
-EXPOSE 9527 19860
+EXPOSE 80 443 9527
 
 CMD ["./cert", "-f", "internal/configs/config.yaml"]
