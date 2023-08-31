@@ -12,7 +12,9 @@ RUN go mod download && go mod tidy
 RUN go build -ldflags="-s -w" -o /etc/cert /build/cert/main.go
 
 
-FROM scratch
+FROM alpine:latest
+
+RUN apk update && apk add ca-certificates
 
 WORKDIR /app
 COPY --from=builder /etc/cert /app/cert
