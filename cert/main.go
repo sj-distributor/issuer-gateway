@@ -8,6 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"net/http/httputil"
+	"net/url"
 	"time"
 )
 
@@ -30,14 +32,20 @@ func main() {
 	}))
 
 	engine.GET("/cert", func(c *gin.Context) {
-
 		certificate, err := utils.ReqCertificate(configs.C.Acme.Email, "anson.itst.cn")
 		log.Println(certificate, err)
 		c.JSON(200, gin.H{
 			"cert": certificate,
 			"err":  err,
 		})
+	})
 
+	engine.GET("/.well-known/acme-challenge/:token", func(c *gin.Context) {
+		target, _ := url.Parse("http://127.0.0.1:5001")
+		c.Request.Host = target.Host
+
+		proxy := httputil.NewSingleHostReverseProxy(target)
+		proxy.ServeHTTP(c.Writer, c.Request)
 	})
 
 	engine.NoRoute(func(c *gin.Context) {
@@ -48,7 +56,7 @@ func main() {
 	})
 
 	if err := utils.GraceFul(time.Minute, &http.Server{
-		Addr:    ":9527",
+		Addr:    ":80",
 		Handler: engine,
 	}).ListenAndServe(); err != nil {
 		log.Fatalln(err)
