@@ -41,7 +41,11 @@ func main() {
 	})
 
 	engine.GET("/.well-known/acme-challenge/:token", func(c *gin.Context) {
+
+		log.Println("token: ", c.Param("token"))
+
 		target, _ := url.Parse("http://127.0.0.1:5001")
+		c.Request.URL.Host = target.Host
 		c.Request.Host = target.Host
 
 		proxy := httputil.NewSingleHostReverseProxy(target)
