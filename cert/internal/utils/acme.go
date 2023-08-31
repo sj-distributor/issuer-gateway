@@ -43,7 +43,7 @@ func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resour
 
 	config := lego.NewConfig(&acmeAccount)
 
-	config.CADirURL = lego.LEDirectoryProduction
+	config.CADirURL = lego.LEDirectoryStaging
 	//
 	//httpClient := &http.Client{}
 	//httpClient.Transport = &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
