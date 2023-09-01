@@ -31,7 +31,6 @@ func (u *AcmeAccount) GetPrivateKey() crypto.PrivateKey {
 }
 
 func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resource, error) {
-
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return nil, err
@@ -49,7 +48,6 @@ func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resour
 		config.CADirURL = lego.LEDirectoryStaging
 	}
 
-	//
 	//httpClient := &http.Client{}
 	//httpClient.Transport = &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
 	//config.HTTPClient = &http.Client{}
@@ -69,12 +67,6 @@ func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resour
 		return nil, err
 	}
 
-	//err = client.Challenge.SetTLSALPN01Provider(tlsalpn01.NewProviderServer("", "443"))
-	//log.Println("SetTLSALPN01Provider-----", err)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-
 	//  注册用户
 	reg, err := client.Registration.Register(registration.RegisterOptions{TermsOfServiceAgreed: true})
 	log.Println("Registration-----", reg, err)
@@ -82,10 +74,6 @@ func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resour
 		return nil, err
 	}
 	acmeAccount.Registration = reg
-
-	log.Println(fmt.Printf("%#v\n", reg))
-
-	log.Println(fmt.Println("-"))
 
 	log.Println(fmt.Println("-- 开始申请证书 --"))
 	// 创建证书

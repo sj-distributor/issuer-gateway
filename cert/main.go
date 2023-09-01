@@ -44,12 +44,13 @@ func main() {
 
 		log.Println("token: ", c.Param("token"))
 
-		target, _ := url.Parse("http://127.0.0.1:5001")
+		target, _ := url.Parse("http://anson.itst.cn:5001")
 		c.Request.URL.Host = target.Host
 		c.Request.Host = target.Host
 
 		proxy := httputil.NewSingleHostReverseProxy(target)
 		proxy.ServeHTTP(c.Writer, c.Request)
+
 	})
 
 	engine.NoRoute(func(c *gin.Context) {
