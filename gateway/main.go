@@ -1,8 +1,8 @@
 package main
 
 import (
+	"cert-gateway/gateway/configs"
 	"cert-gateway/gateway/internal/cache"
-	"cert-gateway/gateway/internal/configs"
 	"cert-gateway/gateway/internal/handler"
 	"cert-gateway/utils"
 	"flag"

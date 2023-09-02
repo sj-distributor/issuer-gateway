@@ -1,7 +1,7 @@
 package acme
 
 import (
-	"cert-gateway/cert/internal/configs"
+	"cert-gateway/cert/configs"
 	"crypto"
 	"crypto/rand"
 	"crypto/rsa"

@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"cert-gateway/gateway/internal/configs"
+	"cert-gateway/gateway/configs"
 	"fmt"
 	"github.com/dgraph-io/ristretto"
 	"github.com/swxctx/ghttp"

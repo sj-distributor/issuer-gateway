@@ -1,8 +1,8 @@
 package main
 
 import (
+	"cert-gateway/cert/configs"
 	"cert-gateway/cert/init/database"
-	"cert-gateway/cert/internal/configs"
 	"cert-gateway/cert/pkg/acme"
 	"cert-gateway/utils"
 	"flag"
@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-var configFile = flag.String("f", "internal/configs/config.yaml", "the config file")
+var configFile = flag.String("f", "configs/config.yaml", "the config file")
 
 func main() {
 

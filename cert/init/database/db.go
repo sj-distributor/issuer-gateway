@@ -1,8 +1,8 @@
 package database
 
 import (
+	"cert-gateway/cert/configs"
 	"cert-gateway/cert/init/database/hooks"
-	"cert-gateway/cert/internal/configs"
 	"cert-gateway/cert/internal/entity"
 	"github.com/pygzfei/gorm-dbup/pkg"
 	"log"
