@@ -1,8 +1,10 @@
 package main
 
 import (
+	"cert-gateway/cert/init/database"
 	"cert-gateway/cert/internal/configs"
-	"cert-gateway/cert/internal/utils"
+	"cert-gateway/cert/pkg/acme"
+	"cert-gateway/utils"
 	"flag"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -19,7 +21,7 @@ func main() {
 
 	utils.MustLoad(configFile, configs.C)
 
-	//database.Init(configs.C)
+	database.Init(configs.C)
 
 	engine := gin.Default()
 
@@ -32,7 +34,7 @@ func main() {
 	}))
 
 	engine.GET("/cert", func(c *gin.Context) {
-		certificate, err := utils.ReqCertificate(configs.C.Acme.Email, "anson.itst.cn")
+		certificate, err := acme.ReqCertificate(configs.C.Acme.Email, "anson.itst.cn")
 		log.Println(certificate, err)
 		c.JSON(200, gin.H{
 			"cert": certificate,
@@ -41,16 +43,12 @@ func main() {
 	})
 
 	engine.GET("/.well-known/acme-challenge/:token", func(c *gin.Context) {
-
-		log.Println("token: ", c.Param("token"))
-
 		target, _ := url.Parse("http://anson.itst.cn:5001")
 		c.Request.URL.Host = target.Host
 		c.Request.Host = target.Host
 
 		proxy := httputil.NewSingleHostReverseProxy(target)
 		proxy.ServeHTTP(c.Writer, c.Request)
-
 	})
 
 	engine.NoRoute(func(c *gin.Context) {

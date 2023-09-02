@@ -1,15 +1,16 @@
-package utils
+package acme
 
 import (
+	"cert-gateway/cert/internal/configs"
 	"crypto"
-	"crypto/ecdsa"
-	"crypto/elliptic"
 	"crypto/rand"
+	"crypto/rsa"
 	"fmt"
 	"github.com/go-acme/lego/v4/certificate"
 	"github.com/go-acme/lego/v4/challenge/http01"
 	"github.com/go-acme/lego/v4/lego"
 	"github.com/go-acme/lego/v4/registration"
+	"log"
 )
 
 // AcmeAccount acme account
@@ -30,8 +31,7 @@ func (u *AcmeAccount) GetPrivateKey() crypto.PrivateKey {
 }
 
 func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resource, error) {
-
-	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return nil, err
 	}
@@ -43,42 +43,48 @@ func ReqCertificate(accountEmail string, domains ...string) (*certificate.Resour
 
 	config := lego.NewConfig(&acmeAccount)
 
-	config.CADirURL = lego.LEDirectoryStaging
+	config.CADirURL = lego.LEDirectoryProduction
+	if configs.C.Acme.Env == "debug" {
+		config.CADirURL = lego.LEDirectoryStaging
+	}
 
 	client, err := lego.NewClient(config)
+	log.Println("client-----", client, err)
+
 	if err != nil {
 		return nil, err
 	}
 
 	// 设置http01验证
-	err = client.Challenge.SetHTTP01Provider(http01.NewProviderServer("", "80"))
+	err = client.Challenge.SetHTTP01Provider(http01.NewProviderServer("", "5001"))
+	log.Println("SetHTTP01Provider-----", err)
+
 	if err != nil {
 		return nil, err
 	}
 
 	//  注册用户
 	reg, err := client.Registration.Register(registration.RegisterOptions{TermsOfServiceAgreed: true})
+	log.Println("Registration-----", reg, err)
 	if err != nil {
 		return nil, err
 	}
 	acmeAccount.Registration = reg
 
-	fmt.Printf("%#v\n", reg)
-	
-	fmt.Println("-")
-
-	fmt.Println("-- 开始申请证书 --")
+	log.Println(fmt.Println("-- 开始申请证书 --"))
 	// 创建证书
 	request := certificate.ObtainRequest{
 		Domains: domains,
 		Bundle:  true,
 	}
+
 	certificates, err := client.Certificate.Obtain(request)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("-- 开始申请结束 --")
+	log.Println(fmt.Println("-- 开始申请结束 --"))
 
-	fmt.Printf("%#v\n", certificates)
+	log.Println(fmt.Printf("%#v\n", certificates))
+
 	return certificates, nil
 }

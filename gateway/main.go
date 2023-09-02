@@ -4,7 +4,7 @@ import (
 	"cert-gateway/gateway/internal/cache"
 	"cert-gateway/gateway/internal/configs"
 	"cert-gateway/gateway/internal/handler"
-	"cert-gateway/gateway/internal/utils"
+	"cert-gateway/utils"
 	"flag"
 	"fmt"
 	"log"
