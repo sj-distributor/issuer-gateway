@@ -43,6 +43,7 @@ func main() {
 	})
 
 	engine.GET("/.well-known/acme-challenge/:token", func(c *gin.Context) {
+
 		target, _ := url.Parse("http://anson.itst.cn:5001")
 		c.Request.URL.Host = target.Host
 		c.Request.Host = target.Host
