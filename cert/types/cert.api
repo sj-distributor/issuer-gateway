@@ -1,0 +1,28 @@
+syntax = "v1"
+
+type AddDomainReq {
+    Domain string `json:"domain"  validate:"required"`
+    Email string `json:"email"  validate:"required"`
+}
+
+type CertificateRequest {
+    Id uint64 `json:"id"`
+}
+
+type AddOrRenewCertificateResp{
+}
+
+
+type CertSyncReq {
+    Maximum uint64 `form:"maximum"`
+}
+
+type CertSyncResp {
+    Certs []Cert `json:"certs"`
+}
+
+type Cert {
+    Domain string `json:"domain"`
+    Certificate string `json:"certificate"`
+    PrivateKey string `json:"private_key"`
+}

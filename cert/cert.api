@@ -1,0 +1,39 @@
+syntax = "v1"
+
+import "types/cert.api"
+import "types/user.api"
+
+// user
+@server(
+	prefix: /api/user
+	group: user
+)
+service cert-api {
+	@doc "用户登录"
+	@handler UserLogin
+	post /login (UserLoginReq) returns (UserLoginResp)
+}
+
+// cert
+@server(
+	prefix: /api
+	group: cert
+	middleware: Authorization
+)
+service cert-api {
+	@doc "绑定域名"
+	@handler AddDomain
+	post /domain (AddDomainReq) returns (AddOrRenewCertificateResp)
+
+	@doc "申请证书"
+	@handler AddCert
+	post /cert (CertificateRequest) returns (AddOrRenewCertificateResp)
+
+	@doc "重新申请证书"
+	@handler RenewCert
+	put /cert (CertificateRequest) returns (AddOrRenewCertificateResp)
+
+	@doc "证书同步"
+	@handler CertSync
+	put /cert/sync (CertSyncReq) returns (CertSyncResp)
+}

@@ -1,6 +1,7 @@
 package cache
 
 type Cert struct {
-	Certificate []byte `json:"certificate"`
-	Key         []byte `json:"key"`
+	Domain      string `json:"domain"`
+	Certificate string `json:"certificate"`
+	PrivateKey  string `json:"private_key"`
 }

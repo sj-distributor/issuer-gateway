@@ -1,14 +1,13 @@
 package database
 
 import (
-	"cert-gateway/cert/configs"
-	"cert-gateway/cert/init/database/hooks"
-	"cert-gateway/cert/internal/entity"
-	"github.com/pygzfei/gorm-dbup/pkg"
+	"cert-gateway/cert/internal/config"
+	"cert-gateway/cert/internal/database/entity"
+	"cert-gateway/cert/internal/database/hooks"
 	"log"
 	"time"
 
-	"github.com/gin-gonic/gin"
+	"github.com/pygzfei/gorm-dbup/pkg"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -17,7 +16,7 @@ import (
 
 var db *gorm.DB
 
-func Init(c *configs.Config) {
+func Init(c *config.Config) {
 	database, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:                       c.Mysql.Dns, // DSN data source name
 		DefaultStringSize:         256,         // string 类型字段的默认长度
@@ -38,17 +37,14 @@ func Init(c *configs.Config) {
 
 	db = database
 
-	if c.Env == gin.DebugMode {
-		err = database.AutoMigrate(
-			&entity.Cert{},
-		)
+	if c.Env == "dev" || c.Env == "debug" {
+		err = database.AutoMigrate(&entity.Cert{})
 		if err != nil {
 			log.Fatalln(err)
 		}
-
 		db = database.Debug()
-	} else if c.Env == gin.ReleaseMode {
-		err = database.Use(pkg.NewMigration(c.Mysql.Migration.Database, c.Mysql.Migration.Path))
+	} else if c.Env == "release" {
+		err = database.Use(pkg.NewMigration(c.Mysql.Migration.Db, c.Mysql.Migration.Path))
 		if err != nil {
 			log.Fatalln(err)
 		}

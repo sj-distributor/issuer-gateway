@@ -1,0 +1,10 @@
+syntax = "v1"
+
+type UserLoginReq {
+    Name string `json:"name"  validate:"required,email"`
+    Pass string `json:"pass"  validate:"required"`
+}
+
+type UserLoginResp {
+    Token string `json:"token"`
+}

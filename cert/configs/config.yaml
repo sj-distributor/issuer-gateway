@@ -1,9 +1,0 @@
-Mysql:
-  Dns: "root:123456@tcp(127.0.0.1:3306)/cert-gateway?charset=utf8mb4&parseTime=true"
-  Migration:
-    Path: "/Users/gzf/cert-gateway/cert/init/database/migration"
-    Database: "cert-gateway"
-Env: debug
-Acme:
-  Email: nsgzfei@gmail.com
-  Env: debug
