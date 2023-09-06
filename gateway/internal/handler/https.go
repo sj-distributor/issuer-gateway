@@ -34,7 +34,6 @@ func Https() *http.Server {
 	//	Certificate: string(certPEM),
 	//	Target:      "http://192.167.167.167:9527",
 	//})
-
 	err := cache.GlobalCache.Sync()
 	if err != nil {
 		log.Fatalln(err)
