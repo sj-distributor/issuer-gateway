@@ -24,7 +24,7 @@ func Https() *http.Server {
 	}
 
 	server.TLSConfig = &tls.Config{
-		GetCertificate: CertificateInject(),
+		GetCertificate: CertificateInject,
 	}
 
 	return server

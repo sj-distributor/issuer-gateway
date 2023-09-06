@@ -3,6 +3,7 @@ package cache
 import (
 	"cert-gateway/gateway/configs"
 	"cert-gateway/pkg/acme"
+	"crypto/tls"
 	"fmt"
 	"github.com/dgraph-io/ristretto"
 	"github.com/go-jose/go-jose/v3/json"
@@ -43,8 +44,8 @@ func newMemoryCache(config *configs.Config) *MemoryCache {
 }
 
 // Get returns the value for the given key.
-func (c *MemoryCache) Get(key string) (*Cert, bool) {
-	if val, b := c.DB.Get(key); b {
+func (c *MemoryCache) Get(domain string) (*Cert, bool) {
+	if val, b := c.DB.Get(domain); b {
 		cert := val.(Cert)
 		return &cert, true
 	}
@@ -52,8 +53,8 @@ func (c *MemoryCache) Get(key string) (*Cert, bool) {
 }
 
 // Set sets the value for the given key.
-func (c *MemoryCache) Set(key string, value Cert) bool {
-	return c.DB.Set(key, value, 1)
+func (c *MemoryCache) Set(domain string, value Cert) bool {
+	return c.DB.Set(domain, value, 1)
 }
 
 // Delete deletes the value for the given key.
@@ -101,6 +102,13 @@ func (c *MemoryCache) Sync() error {
 		}
 		cert.Certificate = certificateDecrypt
 		cert.PrivateKey = privateKeyDecrypt
+
+		pair, err := tls.X509KeyPair([]byte(certificateDecrypt), []byte(privateKeyDecrypt))
+		if err != nil {
+			log.Println(fmt.Sprintf("tls.X509KeyPair error: %s", err.Error()))
+			continue
+		}
+		cert.TlS = pair
 
 		c.Set(cert.Domain, cert)
 	}

@@ -3,21 +3,13 @@ package handler
 import (
 	"cert-gateway/gateway/internal/cache"
 	"crypto/tls"
-	"log"
+	"errors"
+	"fmt"
 )
 
-func CertificateInject() func(info *tls.ClientHelloInfo) (*tls.Certificate, error) {
-	return func(info *tls.ClientHelloInfo) (*tls.Certificate, error) {
-		domain := info.ServerName
-		if cert, b := cache.GlobalCache.Get(domain); b {
-
-			pair, err := tls.X509KeyPair([]byte(cert.Certificate), []byte(cert.PrivateKey))
-			if err != nil {
-				log.Fatalln(err)
-			}
-
-			return &pair, nil
-		}
-		return &tls.Certificate{}, nil
+func CertificateInject(info *tls.ClientHelloInfo) (*tls.Certificate, error) {
+	if cert, b := cache.GlobalCache.Get(info.ServerName); b {
+		return &cert.TlS, nil
 	}
+	return &tls.Certificate{}, errors.New(fmt.Sprintf("%s: certificate not found", info.ServerName))
 }

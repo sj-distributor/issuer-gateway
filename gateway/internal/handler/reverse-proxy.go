@@ -19,12 +19,6 @@ func ReverseProxyHandler(w http.ResponseWriter, r *http.Request) {
 		r.Host = target.Host
 
 		proxy := httputil.NewSingleHostReverseProxy(target)
-		proxy.Transport = &http.Transport{
-			MaxIdleConns:        1024, // 最大空闲连接数
-			MaxIdleConnsPerHost: 100,  // 每个主机的最大空闲连接数
-			ForceAttemptHTTP2:   true,
-			DisableKeepAlives:   false,
-		}
 		proxy.ServeHTTP(w, r)
 	} else {
 		http.Error(w, "Not Found", http.StatusNotFound)
