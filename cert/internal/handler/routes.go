@@ -38,14 +38,24 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Handler: cert.AddCertHandler(serverCtx),
 				},
 				{
+					Method:  http.MethodPost,
+					Path:    "/cert/upload",
+					Handler: cert.AddCertFormUploadHandler(serverCtx),
+				},
+				{
 					Method:  http.MethodPut,
 					Path:    "/cert",
 					Handler: cert.RenewCertHandler(serverCtx),
 				},
 				{
-					Method:  http.MethodPut,
+					Method:  http.MethodGet,
 					Path:    "/cert/sync",
 					Handler: cert.CertSyncHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/certs",
+					Handler: cert.GetCertsPagingHandler(serverCtx),
 				},
 			}...,
 		),

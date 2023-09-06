@@ -2,12 +2,20 @@
 package types
 
 type AddDomainReq struct {
-	Domain string `json:"domain"  validate:"required"`
-	Email  string `json:"email"  validate:"required"`
+	Domain string `json:"domain" validate:"required,hostname_rfc1123"`
+	Email  string `json:"email" validate:"required,email"`
+	Target string `json:"target" validate:"required"`
 }
 
 type CertificateRequest struct {
 	Id uint64 `json:"id"`
+}
+
+type AddCertFormUploadReq struct {
+	Id                uint64 `json:"id"`
+	Certificate       string `json:"certificate" validate:"required"`
+	PrivateKey        string `json:"private_key" validate:"required"`
+	IssuerCertificate string `json:"issuer_certificate"`
 }
 
 type AddOrRenewCertificateResp struct {
@@ -21,10 +29,33 @@ type CertSyncResp struct {
 	Certs []Cert `json:"certs"`
 }
 
+type GetCertsPagingReq struct {
+	Page   int    `form:"page" validate:"required"`
+	Size   int    `form:"size" validate:"required"`
+	Domain string `form:"domain"`
+	Email  string `form:"email"`
+}
+
+type GetCertsPagingResp struct {
+	Certs []CertDto `json:"certs"`
+	Total uint64    `json:"total"`
+}
+
+type CertDto struct {
+	Id        uint64 `json:"id"`
+	Domain    string `json:"domain"`
+	Target    string `json:"target"`
+	Email     string `json:"email"`
+	Expire    int64  `json:"expire"`
+	CreatedAt int64  `json:"created_at"`
+}
+
 type Cert struct {
+	Id          uint64 `json:"id"`
 	Domain      string `json:"domain"`
 	Certificate string `json:"certificate"`
 	PrivateKey  string `json:"private_key"`
+	Target      string `json:"target"`
 }
 
 type UserLoginReq struct {

@@ -8,18 +8,22 @@ import (
 )
 
 func GenJwt(id, name, jwtSecret, secret string) (string, error) {
-	encryptId, err := Encrypt([]byte(id), []byte(secret))
+	encryptId, err := Encrypt(id, secret)
 	if err != nil {
 		return "", errors.New(5001, "Error creating token")
 	}
-	encryptName, err := Encrypt([]byte(name), []byte(secret))
+	encryptName, err := Encrypt(name, secret)
 	if err != nil {
 		return "", errors.New(5001, "Error creating token")
 	}
+
+	fmt.Println("encryptId: ", encryptId)
+	fmt.Println("encryptName: ", encryptName)
+
 	// 创建一个新的 JWT Claims 对象
 	claims := jwt.MapClaims{
-		"id":   string(encryptId),
-		"name": string(encryptName),
+		"id":   encryptId,
+		"name": encryptName,
 		"exp":  time.Now().Add(time.Hour * 24 * 356).Unix(), // 设置过期时间为一年
 	}
 
@@ -49,20 +53,24 @@ func ParseJwt(tokenString, jwtSecret, secret, targetId, targetName string) error
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		claimId := claims["id"].(string)
 		claimName := claims["name"].(string)
-		//exp := claims["exp"].(float64)
-		//expirationTime := time.Unix(int64(exp), 0)
-		//fmt.Println("Token expires at:", expirationTime)
-		decryptId, err := Decrypt([]byte(claimId), []byte(secret))
+		exp := claims["exp"].(float64)
+
+		if time.Now().Unix() >= int64(exp) {
+			return errors.New(5001, "Token is not valid")
+		}
+
+		decryptId, err := Decrypt(claimId, secret)
 		if err != nil {
 			return errors.New(5001, "Token is not valid")
 		}
-		decryptName, err := Decrypt([]byte(claimName), []byte(secret))
+		decryptName, err := Decrypt(claimName, secret)
 		if err != nil {
 			return errors.New(5001, "Token is not valid")
 		}
-		if string(decryptId) != targetId || string(decryptName) != targetName {
+		if decryptId != targetId || decryptName != targetName {
 			return errors.New(5001, "Token is not valid")
 		}
+
 		return nil
 	} else {
 		return errors.New(5001, "Token is not valid")

@@ -3,8 +3,8 @@ package cert
 import (
 	"cert-gateway/cert/internal/database/entity"
 	"cert-gateway/cert/internal/errs"
-	"cert-gateway/cert/pkg/acme"
 	"cert-gateway/cert/pkg/cache"
+	"cert-gateway/pkg/acme"
 	"context"
 	"gorm.io/gorm"
 
@@ -40,24 +40,24 @@ func (l *RenewCertLogic) RenewCert(req *types.CertificateRequest) (resp *types.A
 		}
 
 		// 2. renew
+		certInfo, err := acme.ReqCertificate(l.svcCtx.Config.Env, cert.Email, cert.Domain)
+		if err != nil {
+			return err
+		}
+
+		certificateEncrypt, privateKeyEncrypt, issuerCertificateEncrypt, expire, err := acme.EncryptCertificate(certInfo, l.svcCtx.Config.Secret)
+		if err != nil {
+			return err
+		}
+
 		newCert := &entity.Cert{
-			Domain: cert.Domain,
-			Email:  cert.Email,
-		}
-
-		certInfo, err := acme.ReqCertificate(l.svcCtx, newCert.Email, newCert.Domain)
-		if err != nil {
-			return err
-		}
-
-		err = acme.EncryptCertificate(certInfo, newCert, l.svcCtx.Config.Secret)
-		if err != nil {
-			return err
-		}
-
-		created := tx.Create(newCert)
-		if created.Error != nil || created.RowsAffected == 0 {
-			return errs.DatabaseError
+			Domain:            cert.Domain,
+			Email:             cert.Email,
+			Target:            cert.Target,
+			Certificate:       certificateEncrypt,
+			PrivateKey:        privateKeyEncrypt,
+			IssuerCertificate: issuerCertificateEncrypt,
+			Expire:            expire,
 		}
 
 		// 3. 删
@@ -66,11 +66,19 @@ func (l *RenewCertLogic) RenewCert(req *types.CertificateRequest) (resp *types.A
 			return errs.NotFoundException
 		}
 
+		// 4. 新增 cert
+		created := tx.Create(newCert)
+		if created.Error != nil || created.RowsAffected == 0 {
+			return errs.DatabaseError
+		}
+
 		// 更新缓存
 		cache.CertCache.Set(newCert.Id, types.Cert{
+			Id:          newCert.Id,
 			PrivateKey:  newCert.PrivateKey,
 			Certificate: newCert.Certificate,
 			Domain:      newCert.Domain,
+			Target:      newCert.Target,
 		})
 
 		return nil

@@ -1,5 +1,4 @@
 Server:
-  Url: http://192.167.167.167:9999/ping?last=
-  Secret: 5H3GnAiCYpwHJIU
-MustHttps: true
+  Url: http://127.0.0.1:9090/api/cert/sync?maximum=
+  Secret: 66d2e42661bc292f8237b4736a423a36
 

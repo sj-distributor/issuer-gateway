@@ -20,20 +20,20 @@ func NewAuthorizationMiddleware(c *config.Config) *AuthorizationMiddleware {
 }
 
 func (m *AuthorizationMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
-	var config = m.Config
 	return func(w http.ResponseWriter, r *http.Request) {
-
+		c := m.Config
 		token := r.Header.Get("Authorization")
 		_, after, _ := strings.Cut(token, "Bearer ")
 		if after != "" {
 			token = after
 		}
-		err := utils.ParseJwt(token, config.JWTSecret, config.Secret, config.User.Name, config.User.Pass)
-		if err != nil {
-			xhttp.JsonBaseResponseCtx(r.Context(), w, errs.UnAuthorizationException)
-			return
+		if token != m.Config.Secret {
+			err := utils.ParseJwt(token, c.JWTSecret, c.Secret, c.User.Pass, c.User.Name)
+			if err != nil {
+				xhttp.JsonBaseResponseCtx(r.Context(), w, errs.UnAuthorizationException)
+				return
+			}
 		}
-
 		next(w, r)
 	}
 }

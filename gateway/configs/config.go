@@ -7,8 +7,4 @@ type Config struct {
 		Url    string
 		Secret string
 	}
-	MustHttps bool
-	Acme      struct {
-		Email string
-	}
 }

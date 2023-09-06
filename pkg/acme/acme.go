@@ -1,7 +1,6 @@
 package acme
 
 import (
-	"cert-gateway/cert/internal/svc"
 	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
@@ -30,7 +29,7 @@ func (u *AcmeAccount) GetPrivateKey() crypto.PrivateKey {
 	return u.key
 }
 
-func ReqCertificate(c *svc.ServiceContext, accountEmail string, domains ...string) (*certificate.Resource, error) {
+func ReqCertificate(env, accountEmail string, domains ...string) (*certificate.Resource, error) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return nil, err
@@ -44,7 +43,7 @@ func ReqCertificate(c *svc.ServiceContext, accountEmail string, domains ...strin
 	config := lego.NewConfig(&acmeAccount)
 
 	config.CADirURL = lego.LEDirectoryProduction
-	if c.Config.Env == "debug" {
+	if env == "debug" {
 		config.CADirURL = lego.LEDirectoryStaging
 	}
 

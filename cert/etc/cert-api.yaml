@@ -1,8 +1,8 @@
 Name: cert-api
 Host: 0.0.0.0
-Port: 80
+Port: 9090
 
-Secret: ZsVYrQwJFad84Vs
+Secret: 66d2e42661bc292f8237b4736a423a36
 
 Env: debug
 
@@ -20,4 +20,4 @@ JWTSecret: F2NFhljyALXM86x
 
 CertCache:
   AllUpdateHour: 2
-  PartialUpdateMinute: 10
+  PartialUpdateMinute: 5

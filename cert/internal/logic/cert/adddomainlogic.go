@@ -28,6 +28,7 @@ func (l *AddDomainLogic) AddDomain(req *types.AddDomainReq) (resp *types.AddOrRe
 	db := l.svcCtx.DB.Create(&entity.Cert{
 		Email:  req.Email,
 		Domain: req.Domain,
+		Target: req.Target,
 	})
 
 	if db.RowsAffected == 0 || db.Error != nil {

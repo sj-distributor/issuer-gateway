@@ -5,8 +5,8 @@ import (
 	"cert-gateway/cert/internal/errs"
 	"cert-gateway/cert/internal/svc"
 	"cert-gateway/cert/internal/types"
-	"cert-gateway/cert/pkg/acme"
 	"cert-gateway/cert/pkg/cache"
+	"cert-gateway/pkg/acme"
 	"context"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -36,13 +36,17 @@ func (l *AddCertLogic) AddCert(req *types.CertificateRequest) (resp *types.AddOr
 		return nil, db.Error
 	}
 
-	certInfo, err := acme.ReqCertificate(l.svcCtx, cert.Email, cert.Domain)
+	certInfo, err := acme.ReqCertificate(l.svcCtx.Config.Env, cert.Email, cert.Domain)
 
-	err = acme.EncryptCertificate(certInfo, cert, l.svcCtx.Config.Secret)
-
+	certificateEncrypt, privateKeyEncrypt, issuerCertificateEncrypt, expire, err := acme.EncryptCertificate(certInfo, l.svcCtx.Config.Secret)
 	if err != nil {
 		return nil, err
 	}
+
+	cert.IssuerCertificate = issuerCertificateEncrypt
+	cert.Certificate = certificateEncrypt
+	cert.PrivateKey = privateKeyEncrypt
+	cert.Expire = expire
 
 	tx := l.svcCtx.DB.Save(cert)
 	if tx.Error != nil || tx.RowsAffected == 0 {
@@ -54,6 +58,7 @@ func (l *AddCertLogic) AddCert(req *types.CertificateRequest) (resp *types.AddOr
 		PrivateKey:  cert.PrivateKey,
 		Certificate: cert.Certificate,
 		Domain:      cert.Domain,
+		Target:      cert.Target,
 	})
 
 	return &types.AddOrRenewCertificateResp{}, nil

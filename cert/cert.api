@@ -29,11 +29,20 @@ service cert-api {
 	@handler AddCert
 	post /cert (CertificateRequest) returns (AddOrRenewCertificateResp)
 
+	@doc "上传证书"
+	@handler AddCertFormUpload
+	post /cert/upload (AddCertFormUploadReq) returns (AddOrRenewCertificateResp)
+
 	@doc "重新申请证书"
 	@handler RenewCert
 	put /cert (CertificateRequest) returns (AddOrRenewCertificateResp)
 
-	@doc "证书同步"
+	@doc "增量以及全量证书同步, 看传入的maximum"
 	@handler CertSync
-	put /cert/sync (CertSyncReq) returns (CertSyncResp)
+	get /cert/sync (CertSyncReq) returns (CertSyncResp)
+
+	@doc "证书分页"
+	@handler GetCertsPaging
+	get /certs (GetCertsPagingReq) returns (GetCertsPagingResp)
+
 }

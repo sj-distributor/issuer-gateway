@@ -2,14 +2,20 @@ package cache
 
 import (
 	"cert-gateway/gateway/configs"
+	"cert-gateway/pkg/acme"
+	"fmt"
 	"github.com/dgraph-io/ristretto"
+	"github.com/go-jose/go-jose/v3/json"
+	"io"
 	"log"
+	"net/http"
 )
 
 var GlobalCache *MemoryCache
 
 func Init(config *configs.Config) {
 	GlobalCache = newMemoryCache(config)
+	GlobalCache.Sync()
 }
 
 type MemoryCache struct {
@@ -37,16 +43,67 @@ func newMemoryCache(config *configs.Config) *MemoryCache {
 }
 
 // Get returns the value for the given key.
-func (c *MemoryCache) Get(key interface{}) (interface{}, bool) {
-	return c.DB.Get(key)
+func (c *MemoryCache) Get(key string) (*Cert, bool) {
+	if val, b := c.DB.Get(key); b {
+		cert := val.(Cert)
+		return &cert, true
+	}
+	return nil, false
 }
 
 // Set sets the value for the given key.
-func (c *MemoryCache) Set(key interface{}, value interface{}) bool {
+func (c *MemoryCache) Set(key string, value Cert) bool {
 	return c.DB.Set(key, value, 1)
 }
 
 // Delete deletes the value for the given key.
 func (c *MemoryCache) Delete(key string) {
 	c.DB.Del(key)
+}
+
+func (c *MemoryCache) Sync() error {
+	// 发起 GET 请求
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%d", c.Config.Server.Url, c.LastCertNumber), nil)
+	if err != nil {
+		log.Println("GET 请求错误:", err)
+		return err
+	}
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", c.Config.Server.Secret))
+	// 创建 HTTP 客户端
+	client := &http.Client{}
+	// 发送请求
+	response, err := client.Do(req)
+
+	defer response.Body.Close()
+
+	// 读取响应内容
+	var resp Resp
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Println("读取响应内容错误:", err)
+		return err
+	}
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		log.Println("解析响应内容错误:", err)
+		return err
+	}
+	log.Println("GET 响应内容:")
+	log.Println(resp)
+	for _, cert := range resp.Data.Certs {
+		if c.LastCertNumber < cert.Id {
+			c.LastCertNumber = cert.Id
+		}
+
+		certificateDecrypt, privateKeyDecrypt, _, err := acme.DecryptCertificate(cert.Certificate, cert.PrivateKey, "", c.Config.Server.Secret)
+		if err != nil {
+			return err
+		}
+		cert.Certificate = certificateDecrypt
+		cert.PrivateKey = privateKeyDecrypt
+
+		c.Set(cert.Domain, cert)
+	}
+
+	return nil
 }
