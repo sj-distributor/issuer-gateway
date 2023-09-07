@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"cert-gateway/gateway/configs"
+	"cert-gateway/gateway/internal/config"
 	"cert-gateway/pkg/acme"
 	"crypto/tls"
 	"fmt"
@@ -14,18 +14,17 @@ import (
 
 var GlobalCache *MemoryCache
 
-func Init(config *configs.Config) {
+func Init(config *config.Config) {
 	GlobalCache = newMemoryCache(config)
-	GlobalCache.Sync()
 }
 
 type MemoryCache struct {
 	DB             *ristretto.Cache
 	LastCertNumber uint64
-	Config         *configs.Config
+	Config         *config.Config
 }
 
-func newMemoryCache(config *configs.Config) *MemoryCache {
+func newMemoryCache(config *config.Config) *MemoryCache {
 	cache, err := ristretto.NewCache(&ristretto.Config{
 		NumCounters: 1e7,     // number of keys to track frequency of (10M).
 		MaxCost:     1 << 30, // maximum cost of cache (1GB).

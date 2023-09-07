@@ -1,8 +1,8 @@
 package main
 
 import (
-	"cert-gateway/gateway/configs"
 	"cert-gateway/gateway/internal/cache"
+	"cert-gateway/gateway/internal/config"
 	"cert-gateway/gateway/internal/handler"
 	"cert-gateway/utils"
 	"flag"
@@ -13,11 +13,11 @@ import (
 
 func main() {
 
-	var configFile = flag.String("f", "configs/config.yaml", "the config file")
+	var configFile = flag.String("f", "etc/config.yaml", "the config file")
 
-	utils.MustLoad(configFile, configs.C)
+	utils.MustLoad(configFile, config.C)
 
-	cache.Init(configs.C)
+	cache.Init(config.C)
 
 	fmt.Println("HTTP server listening on :80")
 	handler.Http()
