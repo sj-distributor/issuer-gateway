@@ -20,7 +20,7 @@ func main() {
 	cache.Init(config.C)
 
 	fmt.Println("HTTP server listening on :80")
-	handler.Http()
+	handler.Http(config.C)
 
 	fmt.Println("HTTPS server listening on :443")
 	if err := utils.GraceFul(time.Minute, handler.Https()).ListenAndServeTLS("", ""); err != nil {

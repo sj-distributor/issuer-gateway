@@ -23,4 +23,6 @@ WORKDIR /app
 COPY --from=builder /app/gateway /app/gateway
 COPY --from=builder /app/etc /app/etc
 
+EXPOSE 80 443
+
 CMD ["./gateway", "-f", "etc/config.yaml"]

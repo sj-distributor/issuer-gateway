@@ -2,6 +2,9 @@ package handler
 
 import (
 	"cert-gateway/gateway/internal/cache"
+	"cert-gateway/gateway/internal/config"
+	"fmt"
+	"github.com/zeromicro/go-zero/core/logx"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -49,4 +52,24 @@ func ReverseProxyOrRedirect(w http.ResponseWriter, r *http.Request) {
 
 	proxy := httputil.NewSingleHostReverseProxy(target)
 	proxy.ServeHTTP(w, r)
+}
+
+func AcceptChallenge(c *config.Config) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		target, _ := url.Parse(c.Server.Url)
+
+		fmt.Println(target.Hostname())
+
+		targetUrl := fmt.Sprintf("http://%s:5001%s", target.Hostname(), r.RequestURI)
+
+		logx.Infof("Do challenge start: %s", targetUrl)
+
+		r.Host = target.Host
+		r.URL = target
+
+		proxy := httputil.NewSingleHostReverseProxy(target)
+		proxy.ServeHTTP(w, r)
+	}
+
 }

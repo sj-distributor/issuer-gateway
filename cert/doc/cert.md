@@ -44,8 +44,9 @@ type UserLoginResp struct {
 
 ```golang
 type AddDomainReq struct {
-	Domain string `json:"domain"  validate:"required"`
-	Email string `json:"email"  validate:"required"`
+	Domain string `json:"domain" validate:"required,hostname_rfc1123"`
+	Email string `json:"email" validate:"required,email"`
+	Target string `json:"target" validate:"required"`
 }
 ```
 
@@ -88,7 +89,39 @@ type AddOrRenewCertificateResp struct {
 }
 ```
 
-### 4. "重新申请证书"
+### 4. "上传证书"
+
+1. route definition
+
+- Url: /api/cert/upload
+- Method: POST
+- Request: `AddCertFormUploadReq`
+- Response: `AddOrRenewCertificateResp`
+
+2. request definition
+
+
+
+```golang
+type AddCertFormUploadReq struct {
+	Id uint64 `json:"id"`
+	Certificate string `json:"certificate" validate:"required"`
+	PrivateKey string `json:"private_key" validate:"required"`
+	IssuerCertificate string `json:"issuer_certificate"`
+}
+```
+
+
+3. response definition
+
+
+
+```golang
+type AddOrRenewCertificateResp struct {
+}
+```
+
+### 5. "重新申请证书"
 
 1. route definition
 
@@ -117,12 +150,12 @@ type AddOrRenewCertificateResp struct {
 }
 ```
 
-### 5. "证书同步"
+### 6. "增量以及全量证书同步, 看传入的maximum"
 
 1. route definition
 
 - Url: /api/cert/sync
-- Method: PUT
+- Method: GET
 - Request: `CertSyncReq`
 - Response: `CertSyncResp`
 
@@ -144,6 +177,40 @@ type CertSyncReq struct {
 ```golang
 type CertSyncResp struct {
 	Certs []Cert `json:"certs"`
+}
+```
+
+### 7. "证书分页"
+
+1. route definition
+
+- Url: /api/certs
+- Method: GET
+- Request: `GetCertsPagingReq`
+- Response: `GetCertsPagingResp`
+
+2. request definition
+
+
+
+```golang
+type GetCertsPagingReq struct {
+	Page int `form:"page" validate:"required"`
+	Size int `form:"size" validate:"required"`
+	Domain string `form:"domain"`
+	Email string `form:"email"`
+}
+```
+
+
+3. response definition
+
+
+
+```golang
+type GetCertsPagingResp struct {
+	Certs []CertDto `json:"certs"`
+	Total uint64 `json:"total"`
 }
 ```
 

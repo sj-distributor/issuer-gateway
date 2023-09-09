@@ -1,4 +1,3 @@
 Server:
   Url: http://192.167.167.167:9090/api/cert/sync?maximum=
   Secret: 66d2e42661bc292f8237b4736a423a36
-

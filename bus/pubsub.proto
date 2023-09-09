@@ -1,0 +1,24 @@
+// pubsub.proto
+
+syntax = "proto3";
+option go_package = "./pb";
+package pb;
+
+message SubscribeRequest {
+  string subscriber_id = 1;
+}
+
+message PublishRequest {
+  string message = 1;
+}
+
+message Message {
+  string message = 1;
+}
+
+message Empty {}
+
+service PubSubService {
+  rpc Subscribe(SubscribeRequest) returns (stream Message);
+  rpc Publish(PublishRequest) returns (Empty);
+}

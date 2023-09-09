@@ -13,7 +13,7 @@ User:
 Mysql:
   Dns: root:123456@tcp(192.167.167.167:3306)/cert-gateway?charset=utf8mb4&parseTime=true
   Migration:
-    Path: "/Users/gzf/cert-gateway/cert/internal/database/migration"
+    Path: "internal/database/migration"
     Db: "cert-gateway"
 
 JWTSecret: F2NFhljyALXM86x
@@ -21,3 +21,6 @@ JWTSecret: F2NFhljyALXM86x
 CertCache:
   AllUpdateHour: 2
   PartialUpdateMinute: 5
+
+Acme:
+  HttpChallengePort: 5001
