@@ -11,4 +11,4 @@ test:
 build:
 	docker build -f ./cert/Dockerfile -t cert:v1.0.0 . &&  docker build -f ./gateway/Dockerfile -t gateway:v1.0.0 .
 proto:
-	cd bus && protoc --go_out=. --go-grpc_out=. pubsub.proto cd ..
+	cd bus && protoc --go_out=. --go-grpc_out=. pubsub.proto && cd ..

@@ -18,9 +18,9 @@ import (
 	"net/http"
 )
 
-var configFile = flag.String("f", "etc/cert-api.yaml", "the config file")
-
 func main() {
+
+	var configFile = flag.String("f", "etc/cert-api.yaml", "the config file")
 
 	flag.Parse()
 

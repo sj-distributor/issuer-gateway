@@ -26,6 +26,6 @@ COPY --from=builder /app/cert /app/cert
 COPY --from=builder /app/etc /app/etc
 COPY --from=builder /app/internal/database/migration /app/internal/database/migration
 
-EXPOSE 80 5001
+EXPOSE 80 5001 9527
 
 CMD ["./cert", "-f", "etc/cert-api.yaml"]
