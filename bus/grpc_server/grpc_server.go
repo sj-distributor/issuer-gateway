@@ -1,18 +1,14 @@
-// main.go
-package main
+package grpc_server
 
 import (
 	"cert-gateway/bus/pb"
 	"context"
-	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/x/errors"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"log"
-	"net"
 	"sync"
-
-	"google.golang.org/grpc"
 )
 
 // PublisherServer 实现了发布者服务
@@ -83,8 +79,8 @@ func (s *PublisherServer) Publish(ctx context.Context, req *pb.PublishRequest) (
 	return &pb.Empty{}, nil
 }
 
-// 自定义流拦截器
-func customStreamInterceptor(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+// StreamInterceptor 自定义流拦截器
+func StreamInterceptor(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 
 	md, b := metadata.FromIncomingContext(ss.Context())
 	if !b {
@@ -99,42 +95,15 @@ func customStreamInterceptor(srv interface{}, ss grpc.ServerStream, info *grpc.S
 	logx.Infof("bearer token is %s", token)
 
 	err := handler(srv, ss)
+	// grpc 客户端 断连提示
 	log.Printf("Stream Interceptor: After method %s is called", info.FullMethod)
 	return err
 }
 
-// 自定义一元拦截器
-func customUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+// UnaryInterceptor 自定义一元拦截器
+func UnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	log.Printf("Unary Interceptor: Before method %s is called", info.FullMethod)
 	resp, err := handler(ctx, req)
 	log.Printf("Unary Interceptor: After method %s is called", info.FullMethod)
 	return resp, err
-}
-
-func main() {
-	// 监听 gRPC 服务端口
-	lis, err := net.Listen("tcp", ":9527")
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-
-	// 创建 gRPC 服务器
-	server := grpc.NewServer(
-		// 注册一元拦截器
-		grpc.UnaryInterceptor(customUnaryInterceptor),
-		// 注册流拦截器
-		grpc.StreamInterceptor(customStreamInterceptor),
-	)
-
-	// 创建发布者服务
-	publisher := NewPublisherServer()
-
-	// 注册发布者服务到 gRPC 服务器
-	pb.RegisterPubSubServiceServer(server, publisher)
-
-	fmt.Println("Server is listening on :9527...")
-	// 启动 gRPC 服务器
-	if err := server.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
 }

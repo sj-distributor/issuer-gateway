@@ -7,7 +7,13 @@ type Config struct {
 	Secret    string
 	Env       string
 	JWTSecret string
-	User      struct {
+	Sync      struct {
+		Type    string
+		Address string
+		User    string
+		Pass    string
+	}
+	User struct {
 		Name string
 		Pass string
 	}

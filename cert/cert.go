@@ -6,6 +6,7 @@ import (
 	"cert-gateway/cert/internal/errs"
 	"cert-gateway/cert/internal/handler"
 	"cert-gateway/cert/internal/svc"
+	"cert-gateway/cert/internal/syncx"
 	"cert-gateway/cert/middleware"
 	"cert-gateway/cert/pkg/cache"
 	"cert-gateway/pkg/acme"
@@ -52,5 +53,8 @@ func main() {
 	handler.RegisterHandlers(server, ctx)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
+
+	syncx.Init(&c)
+
 	server.Start()
 }

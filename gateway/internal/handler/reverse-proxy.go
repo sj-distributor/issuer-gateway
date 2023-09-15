@@ -57,7 +57,7 @@ func ReverseProxyOrRedirect(w http.ResponseWriter, r *http.Request) {
 func AcceptChallenge(c *config.Config) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		target, _ := url.Parse(c.Server.Url)
+		target, _ := url.Parse(c.IssuerUrl)
 
 		fmt.Println(target.Hostname())
 

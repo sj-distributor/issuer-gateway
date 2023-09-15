@@ -4,6 +4,16 @@ Port: 9090
 
 Secret: 66d2e42661bc292f8237b4736a423a36
 
+Sync:
+  # GRPC
+  # REDIS
+  # ETCD
+  # AMQP
+  Type: GRPC
+  Address: 127.0.0.1:9527
+  User: ""
+  Pass: ""
+
 Env: debug
 
 User:

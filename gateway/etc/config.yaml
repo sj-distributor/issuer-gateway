@@ -1,3 +1,13 @@
-Server:
-  Url: http://192.167.167.167:9090/api/cert/sync?maximum=
-  Secret: 66d2e42661bc292f8237b4736a423a36
+Secret: 66d2e42661bc292f8237b4736a423a36
+IssuerUrl: http://192.167.167.167:9090/api/cert/sync?maximum=
+
+Sync:
+  # GRPC
+  # REDIS
+  # ETCD
+  # AMQP
+  Type: GRPC
+  Address: 127.0.0.1:9527
+  User: ""
+  Pass: ""
+

@@ -2,11 +2,14 @@ package user
 
 import (
 	"cert-gateway/cert/internal/errs"
+	"cert-gateway/cert/internal/svc"
+	"cert-gateway/cert/internal/syncx"
+	"cert-gateway/cert/internal/types"
+	"cert-gateway/cert/pkg/cache"
 	"cert-gateway/utils"
 	"context"
-
-	"cert-gateway/cert/internal/svc"
-	"cert-gateway/cert/internal/types"
+	"github.com/go-jose/go-jose/v3/json"
+	"log"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -29,11 +32,21 @@ func (l *UserLoginLogic) UserLogin(req *types.UserLoginReq) (resp *types.UserLog
 	user := l.svcCtx.Config.User
 	jwt, err := utils.GenJwt(req.Pass, req.Name, l.svcCtx.Config.JWTSecret, l.svcCtx.Config.Secret)
 
+	certsStr, err := json.Marshal(cache.CertCache.CaptureChanged(0))
+	if err != nil {
+		log.Panicln(err)
+	}
+	err = syncx.GlobalPubSub.Publish(string(certsStr))
+
+	if err != nil {
+		log.Panicln(err)
+	}
+
 	if req.Name == user.Name && req.Pass == user.Pass {
 		return &types.UserLoginResp{
 			Token: jwt,
 		}, nil
 	}
-	
+
 	return nil, errs.UnAuthorizationException
 }
