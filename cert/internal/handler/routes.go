@@ -49,11 +49,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodGet,
-					Path:    "/cert/sync",
-					Handler: cert.CertSyncHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
 					Path:    "/certs",
 					Handler: cert.GetCertsPagingHandler(serverCtx),
 				},

@@ -34,14 +34,21 @@ func (l *GetCertsPagingLogic) GetCertsPaging(req *types.GetCertsPagingReq) (resp
 
 	var certs []entity.Cert
 
-	db := l.DB.Scopes(hooks.Paging(req.Page, req.Size)).Order("id, expire")
+	db := l.DB.Table("cert")
 	if req.Domain != "" {
 		db = db.Where(fmt.Sprintf("domain like %q", "%"+req.Domain+"%"))
 	}
 	if req.Email != "" {
 		db = db.Where(fmt.Sprintf("email like %q", "%"+req.Email+"%"))
 	}
-	err = db.Find(&certs).Error
+
+	count := int64(0)
+	err = db.Count(&count).Error
+	if err != nil {
+		return nil, err
+	}
+
+	err = db.Scopes(hooks.Paging(req.Page, req.Size)).Order("id, expire").Find(&certs).Error
 
 	if err != nil {
 		return nil, err
@@ -62,5 +69,6 @@ func (l *GetCertsPagingLogic) GetCertsPaging(req *types.GetCertsPagingReq) (resp
 
 	return &types.GetCertsPagingResp{
 		Certs: certDtos,
+		Total: uint64(count),
 	}, nil
 }

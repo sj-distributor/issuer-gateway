@@ -32,8 +32,8 @@ type CertSyncResp struct {
 type GetCertsPagingReq struct {
 	Page   int    `form:"page" validate:"required"`
 	Size   int    `form:"size" validate:"required"`
-	Domain string `form:"domain"`
-	Email  string `form:"email"`
+	Domain string `form:"domain,optional"`
+	Email  string `form:"email,optional"`
 }
 
 type GetCertsPagingResp struct {
