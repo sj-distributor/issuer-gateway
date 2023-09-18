@@ -16,6 +16,11 @@ import (
 var GlobalPubSub driver.IPubSubDriver
 
 func Init(c *config.Config) {
+	podId := os.Getenv("podId")
+	if podId == "" {
+		id := utils.GetLocalId()
+		podId = id
+	}
 	switch c.Sync.Type {
 	case driver.GRPC:
 		md := metadata.Pairs("Authorization", "Bearer "+c.Secret)
@@ -23,36 +28,41 @@ func Init(c *config.Config) {
 
 		GlobalPubSub = driver.NewGrpcClient(c.Sync.Address, ctx)
 
-		podId := os.Getenv("podId")
-		if podId == "" {
-			id := utils.GetLocalId()
-			podId = id
+		err := GlobalPubSub.Subscribe(podId, handlerMessage, func(err error) {
+			log.Println(err)
+		})
+		if err != nil {
+			log.Panicln(fmt.Sprintf("Grpc init fail: %s", err.Error()))
 		}
-
-		err := GlobalPubSub.Subscribe(podId, func(msg string) {
-
-			var certs []cache.Cert
-
-			err := json.Unmarshal([]byte(msg), &certs)
-			if err != nil {
-				log.Println(err)
-			}
-
-			err = cache.GlobalCache.SetRange(&certs)
-			if err != nil {
-				log.Println(err)
-			}
-		}, func(err error) {
+		break
+	case driver.REDIS:
+		GlobalPubSub = driver.NewRedisClient(c.Sync.Address, c.Sync.Pass, 0)
+		err := GlobalPubSub.Subscribe(podId, handlerMessage, func(err error) {
 			log.Println(err)
 		})
 
-		log.Panicln(fmt.Sprintf("Grpc init fail: %s", err.Error()))
-		break
-	case driver.REDIS:
+		if err != nil {
+			log.Panicln(fmt.Sprintf("redis init fail: %s", err.Error()))
+		}
 		break
 	case driver.AMQP:
 		break
 	case driver.ETCD:
 		break
+	}
+}
+
+func handlerMessage(msg string) {
+
+	var certs []cache.Cert
+
+	err := json.Unmarshal([]byte(msg), &certs)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = cache.GlobalCache.SetRange(&certs)
+	if err != nil {
+		log.Println(err)
 	}
 }

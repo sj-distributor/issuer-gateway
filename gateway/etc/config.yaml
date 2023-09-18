@@ -6,8 +6,10 @@ Sync:
   # REDIS
   # ETCD
   # AMQP
-  Type: GRPC
-  Address: 127.0.0.1:9527
+  #  redisUrl: redis://localhost:6379?db=3&password=
+  Type: REDIS
+#  Address: 127.0.0.1:9527
+  Address: 127.0.0.1:6379
   User: ""
   Pass: ""
 
