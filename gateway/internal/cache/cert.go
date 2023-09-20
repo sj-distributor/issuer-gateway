@@ -14,9 +14,3 @@ type Cert struct {
 type Data struct {
 	Certs []Cert `json:"certs"`
 }
-
-type Resp struct {
-	Code int64  `json:"code"`
-	Msg  string `json:"msg"`
-	Data Data   `json:"data"`
-}

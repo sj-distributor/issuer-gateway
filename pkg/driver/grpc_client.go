@@ -3,13 +3,14 @@ package driver
 import (
 	"cert-gateway/bus/pb"
 	"context"
+	"fmt"
 	"google.golang.org/grpc"
 	"io"
 	"log"
 )
 
 type GrpcClient struct {
-	client pb.PubSubServiceClient
+	client pb.CertificateServiceClient
 	ctx    context.Context
 	conn   *grpc.ClientConn
 }
@@ -23,16 +24,21 @@ func NewGrpcClient(addr string, ctx context.Context) *GrpcClient {
 
 	return &GrpcClient{
 		ctx:    ctx,
-		client: pb.NewPubSubServiceClient(conn),
+		client: pb.NewCertificateServiceClient(conn),
 		conn:   conn,
 	}
 }
 
-func (c *GrpcClient) Subscribe(ip string, onMegReceived OnMessageReceived, onErrReceiving ...OnErrReceiving) error {
-	stream, err := c.client.Subscribe(c.ctx, &pb.SubscribeRequest{SubscriberId: ip})
+func (c *GrpcClient) GatewaySubscribe(ip string, onMegReceived OnMessageReceived, onErrReceiving ...OnErrReceiving) error {
+	stream, err := c.client.GatewaySubscribe(c.ctx, &pb.SubscribeRequest{LocalIp: ip})
 	if err != nil {
 		log.Fatalf("Subscribe failed: %v", err)
 		return err
+	}
+
+	err = c.SendCertificateToGateway(ip)
+	if err != nil {
+		log.Panicln(fmt.Sprintf("Grpc init fail: %s", err.Error()))
 	}
 
 	for {
@@ -46,14 +52,19 @@ func (c *GrpcClient) Subscribe(ip string, onMegReceived OnMessageReceived, onErr
 				onErrReceiving[0](err)
 			}
 		}
-		log.Printf("Received message: %s\n", message.Message)
-		onMegReceived(message.Message)
+		log.Printf("Received message: %v\n", message.Certs)
+		onMegReceived(message.Certs)
 	}
 
 	return nil
 }
 
-func (c *GrpcClient) Publish(msg string) error {
-	_, err := c.client.Publish(c.ctx, &pb.PublishRequest{Message: msg})
+func (c *GrpcClient) SendCertificateToGateway(localId string) error {
+	_, err := c.client.SendCertificateToGateway(c.ctx, &pb.SubscribeRequest{LocalIp: localId})
+	return err
+}
+
+func (c *GrpcClient) SyncCertificateToProvider(certificateList *pb.CertificateList) error {
+	_, err := c.client.SyncCertificateToProvider(c.ctx, certificateList)
 	return err
 }

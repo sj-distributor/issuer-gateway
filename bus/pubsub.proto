@@ -5,20 +5,33 @@ option go_package = "./pb";
 package pb;
 
 message SubscribeRequest {
-  string subscriber_id = 1;
+  string local_ip = 1;
 }
 
-message PublishRequest {
-  string message = 1;
+message CertificateList {
+  repeated Cert certs = 1;
 }
 
-message Message {
-  string message = 1;
+message Cert  {
+  uint64 id  = 1;
+  string domain  =2;
+  string certificate = 3;
+  string privateKey = 4;
+  string issuerCertificate = 5;
+  string target = 6;
 }
 
 message Empty {}
 
-service PubSubService {
-  rpc Subscribe(SubscribeRequest) returns (stream Message);
-  rpc Publish(PublishRequest) returns (Empty);
+service CertificateService {
+
+  // 发送证书同步给某个 Gateway
+  rpc SendCertificateToGateway (SubscribeRequest) returns (Empty);
+
+  // Issuer发送证书给Provider
+  rpc SyncCertificateToProvider (CertificateList) returns (Empty);
+
+  // Gateway订阅
+  rpc GatewaySubscribe(SubscribeRequest) returns (stream CertificateList);
+
 }

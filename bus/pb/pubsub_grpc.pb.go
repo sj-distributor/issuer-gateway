@@ -18,28 +18,50 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// PubSubServiceClient is the client API for PubSubService service.
+// CertificateServiceClient is the client API for CertificateService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type PubSubServiceClient interface {
-	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (PubSubService_SubscribeClient, error)
-	Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*Empty, error)
+type CertificateServiceClient interface {
+	// 发送证书同步给某个 Gateway
+	SendCertificateToGateway(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (*Empty, error)
+	// Issuer发送证书给Provider
+	SyncCertificateToProvider(ctx context.Context, in *CertificateList, opts ...grpc.CallOption) (*Empty, error)
+	// Gateway订阅
+	GatewaySubscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (CertificateService_GatewaySubscribeClient, error)
 }
 
-type pubSubServiceClient struct {
+type certificateServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewPubSubServiceClient(cc grpc.ClientConnInterface) PubSubServiceClient {
-	return &pubSubServiceClient{cc}
+func NewCertificateServiceClient(cc grpc.ClientConnInterface) CertificateServiceClient {
+	return &certificateServiceClient{cc}
 }
 
-func (c *pubSubServiceClient) Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (PubSubService_SubscribeClient, error) {
-	stream, err := c.cc.NewStream(ctx, &PubSubService_ServiceDesc.Streams[0], "/pb.PubSubService/Subscribe", opts...)
+func (c *certificateServiceClient) SendCertificateToGateway(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/pb.CertificateService/SendCertificateToGateway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &pubSubServiceSubscribeClient{stream}
+	return out, nil
+}
+
+func (c *certificateServiceClient) SyncCertificateToProvider(ctx context.Context, in *CertificateList, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/pb.CertificateService/SyncCertificateToProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *certificateServiceClient) GatewaySubscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (CertificateService_GatewaySubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &CertificateService_ServiceDesc.Streams[0], "/pb.CertificateService/GatewaySubscribe", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &certificateServiceGatewaySubscribeClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -49,119 +71,139 @@ func (c *pubSubServiceClient) Subscribe(ctx context.Context, in *SubscribeReques
 	return x, nil
 }
 
-type PubSubService_SubscribeClient interface {
-	Recv() (*Message, error)
+type CertificateService_GatewaySubscribeClient interface {
+	Recv() (*CertificateList, error)
 	grpc.ClientStream
 }
 
-type pubSubServiceSubscribeClient struct {
+type certificateServiceGatewaySubscribeClient struct {
 	grpc.ClientStream
 }
 
-func (x *pubSubServiceSubscribeClient) Recv() (*Message, error) {
-	m := new(Message)
+func (x *certificateServiceGatewaySubscribeClient) Recv() (*CertificateList, error) {
+	m := new(CertificateList)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
 	return m, nil
 }
 
-func (c *pubSubServiceClient) Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/pb.PubSubService/Publish", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// PubSubServiceServer is the server API for PubSubService service.
-// All implementations must embed UnimplementedPubSubServiceServer
+// CertificateServiceServer is the server API for CertificateService service.
+// All implementations must embed UnimplementedCertificateServiceServer
 // for forward compatibility
-type PubSubServiceServer interface {
-	Subscribe(*SubscribeRequest, PubSubService_SubscribeServer) error
-	Publish(context.Context, *PublishRequest) (*Empty, error)
-	mustEmbedUnimplementedPubSubServiceServer()
+type CertificateServiceServer interface {
+	// 发送证书同步给某个 Gateway
+	SendCertificateToGateway(context.Context, *SubscribeRequest) (*Empty, error)
+	// Issuer发送证书给Provider
+	SyncCertificateToProvider(context.Context, *CertificateList) (*Empty, error)
+	// Gateway订阅
+	GatewaySubscribe(*SubscribeRequest, CertificateService_GatewaySubscribeServer) error
+	mustEmbedUnimplementedCertificateServiceServer()
 }
 
-// UnimplementedPubSubServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedPubSubServiceServer struct {
+// UnimplementedCertificateServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedCertificateServiceServer struct {
 }
 
-func (UnimplementedPubSubServiceServer) Subscribe(*SubscribeRequest, PubSubService_SubscribeServer) error {
-	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+func (UnimplementedCertificateServiceServer) SendCertificateToGateway(context.Context, *SubscribeRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendCertificateToGateway not implemented")
 }
-func (UnimplementedPubSubServiceServer) Publish(context.Context, *PublishRequest) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Publish not implemented")
+func (UnimplementedCertificateServiceServer) SyncCertificateToProvider(context.Context, *CertificateList) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SyncCertificateToProvider not implemented")
 }
-func (UnimplementedPubSubServiceServer) mustEmbedUnimplementedPubSubServiceServer() {}
+func (UnimplementedCertificateServiceServer) GatewaySubscribe(*SubscribeRequest, CertificateService_GatewaySubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method GatewaySubscribe not implemented")
+}
+func (UnimplementedCertificateServiceServer) mustEmbedUnimplementedCertificateServiceServer() {}
 
-// UnsafePubSubServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to PubSubServiceServer will
+// UnsafeCertificateServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to CertificateServiceServer will
 // result in compilation errors.
-type UnsafePubSubServiceServer interface {
-	mustEmbedUnimplementedPubSubServiceServer()
+type UnsafeCertificateServiceServer interface {
+	mustEmbedUnimplementedCertificateServiceServer()
 }
 
-func RegisterPubSubServiceServer(s grpc.ServiceRegistrar, srv PubSubServiceServer) {
-	s.RegisterService(&PubSubService_ServiceDesc, srv)
+func RegisterCertificateServiceServer(s grpc.ServiceRegistrar, srv CertificateServiceServer) {
+	s.RegisterService(&CertificateService_ServiceDesc, srv)
 }
 
-func _PubSubService_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(SubscribeRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(PubSubServiceServer).Subscribe(m, &pubSubServiceSubscribeServer{stream})
-}
-
-type PubSubService_SubscribeServer interface {
-	Send(*Message) error
-	grpc.ServerStream
-}
-
-type pubSubServiceSubscribeServer struct {
-	grpc.ServerStream
-}
-
-func (x *pubSubServiceSubscribeServer) Send(m *Message) error {
-	return x.ServerStream.SendMsg(m)
-}
-
-func _PubSubService_Publish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PublishRequest)
+func _CertificateService_SendCertificateToGateway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SubscribeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PubSubServiceServer).Publish(ctx, in)
+		return srv.(CertificateServiceServer).SendCertificateToGateway(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.PubSubService/Publish",
+		FullMethod: "/pb.CertificateService/SendCertificateToGateway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PubSubServiceServer).Publish(ctx, req.(*PublishRequest))
+		return srv.(CertificateServiceServer).SendCertificateToGateway(ctx, req.(*SubscribeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// PubSubService_ServiceDesc is the grpc.ServiceDesc for PubSubService service.
+func _CertificateService_SyncCertificateToProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CertificateList)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CertificateServiceServer).SyncCertificateToProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.CertificateService/SyncCertificateToProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CertificateServiceServer).SyncCertificateToProvider(ctx, req.(*CertificateList))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CertificateService_GatewaySubscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SubscribeRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(CertificateServiceServer).GatewaySubscribe(m, &certificateServiceGatewaySubscribeServer{stream})
+}
+
+type CertificateService_GatewaySubscribeServer interface {
+	Send(*CertificateList) error
+	grpc.ServerStream
+}
+
+type certificateServiceGatewaySubscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *certificateServiceGatewaySubscribeServer) Send(m *CertificateList) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// CertificateService_ServiceDesc is the grpc.ServiceDesc for CertificateService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var PubSubService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.PubSubService",
-	HandlerType: (*PubSubServiceServer)(nil),
+var CertificateService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.CertificateService",
+	HandlerType: (*CertificateServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Publish",
-			Handler:    _PubSubService_Publish_Handler,
+			MethodName: "SendCertificateToGateway",
+			Handler:    _CertificateService_SendCertificateToGateway_Handler,
+		},
+		{
+			MethodName: "SyncCertificateToProvider",
+			Handler:    _CertificateService_SyncCertificateToProvider_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "Subscribe",
-			Handler:       _PubSubService_Subscribe_Handler,
+			StreamName:    "GatewaySubscribe",
+			Handler:       _CertificateService_GatewaySubscribe_Handler,
 			ServerStreams: true,
 		},
 	},
