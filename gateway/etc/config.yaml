@@ -2,12 +2,17 @@ Secret: 66d2e42661bc292f8237b4736a423a36
 IssuerAddr: k8s cert service
 
 Sync:
-  # GRPC
-  # REDIS
-  # ETCD
-  # AMQP
-  Type: GRPC
-  Address: 127.0.0.1:9527
-  User: ""
-  Pass: ""
+  #  GRPC
+  #  REDIS
+  #  ETCD
+  #  AMQP
+  Target: REDIS
+  Grpc:
+    Addr: 127.0.0.1:9527
+  Redis:
+    Addrs: [ "127.0.0.1:6379" ]
+    User: ""
+    Pass: ""
+    MasterName: ""
+    DB: 0
 

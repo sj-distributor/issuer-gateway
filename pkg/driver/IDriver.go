@@ -1,5 +1,7 @@
 package driver
 
+import "cert-gateway/bus/pb"
+
 var (
 	GRPC  = "GRPC"
 	REDIS = "REDIS"
@@ -7,10 +9,16 @@ var (
 	AMQP  = "AMQP"
 )
 
-type OnMessageReceived = func(msg string)
+type OnMessageReceived = func(certs []*pb.Cert)
 type OnErrReceiving = func(err error)
 
-type IPubSubDriver interface {
-	Subscribe(ip string, onMegReceived OnMessageReceived, onErrReceiving ...OnErrReceiving) error
-	Publish(msg string) error
+type IProvider interface {
+	//GatewaySubscribe Gateway订阅
+	GatewaySubscribe(localIp string, onMegReceived OnMessageReceived, onErrReceiving ...OnErrReceiving) error
+
+	//SendCertificateToGateway 发送证书同步给某个 Gateway
+	SendCertificateToGateway(localIP string) error
+
+	// SyncCertificateToProvider Issuer发送证书给Provider
+	SyncCertificateToProvider(certificateList *pb.CertificateList) error
 }

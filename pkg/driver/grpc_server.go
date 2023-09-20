@@ -18,7 +18,7 @@ func NewGrpcServiceAndListen(addr string) {
 		grpc.StreamInterceptor(grpc_server.StreamInterceptor),
 	)
 
-	publisherServer := grpc_server.NewPublisherServer()
+	certificatePubSubServer := grpc_server.NewCertificatePubSubServer()
 
 	// 监听 gRPC 服务端口
 	lis, err := net.Listen("tcp", addr)
@@ -26,7 +26,7 @@ func NewGrpcServiceAndListen(addr string) {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	// 注册发布者服务到 gRPC 服务器
-	pb.RegisterPubSubServiceServer(grpcServer, publisherServer)
+	pb.RegisterCertificateServiceServer(grpcServer, certificatePubSubServer)
 
 	fmt.Printf("Server is listening on : %s", addr)
 	// 启动 gRPC 服务器
