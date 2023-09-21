@@ -37,7 +37,7 @@ service cert-api {
 	@handler RenewCert
 	put /cert (CertificateRequest) returns (AddOrRenewCertificateResp)
 
-	//	@doc "增量以及全量证书同步, 看传入的maximum"
+	//	@docs "增量以及全量证书同步, 看传入的maximum"
 	//	@handler CertSync
 	//	get /cert/sync (CertSyncReq) returns (CertSyncResp)
 

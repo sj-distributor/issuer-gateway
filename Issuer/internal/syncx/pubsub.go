@@ -1,7 +1,7 @@
 package syncx
 
 import (
-	"cert-gateway/bus/pb"
+	"cert-gateway/grpc/pb"
 	"cert-gateway/issuer/internal/config"
 	"cert-gateway/issuer/internal/database"
 	"cert-gateway/issuer/internal/database/entity"
@@ -30,7 +30,7 @@ func Init(c *config.Config) driver.IProvider {
 		break
 	}
 
-	setUpCertificate(provider)
+	go setUpCertificate(provider)
 
 	return provider
 }

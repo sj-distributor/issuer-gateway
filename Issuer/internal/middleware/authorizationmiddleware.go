@@ -28,7 +28,7 @@ func (m *AuthorizationMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc
 			token = after
 		}
 		if token != m.Config.Secret {
-			err := utils.ParseJwt(token, c.JWTSecret, c.Secret, c.User.Pass, c.User.Name)
+			err := utils.ParseJwt(token, c.JWTSecret, c.Secret, c.Issuer.User.Pass, c.Issuer.User.Name)
 			if err != nil {
 				xhttp.JsonBaseResponseCtx(r.Context(), w, errs.UnAuthorizationException)
 				return

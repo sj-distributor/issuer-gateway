@@ -1,9 +1,8 @@
 package driver
 
 import (
-	"cert-gateway/bus/pb"
+	"cert-gateway/grpc/pb"
 	"context"
-	"fmt"
 	"google.golang.org/grpc"
 	"io"
 	"log"
@@ -36,25 +35,22 @@ func (c *GrpcClient) GatewaySubscribe(ip string, onMegReceived OnMessageReceived
 		return err
 	}
 
-	err = c.SendCertificateToGateway(ip)
-	if err != nil {
-		log.Panicln(fmt.Sprintf("Grpc init fail: %s", err.Error()))
-	}
-
-	for {
-		message, err := stream.Recv()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			log.Printf("Error receiving message: %v", err)
-			if len(onErrReceiving) > 0 {
-				onErrReceiving[0](err)
+	go func() {
+		for {
+			message, err := stream.Recv()
+			if err == io.EOF {
+				break
 			}
+			if err != nil {
+				log.Printf("Error receiving message: %v", err)
+				if len(onErrReceiving) > 0 {
+					onErrReceiving[0](err)
+				}
+			}
+			log.Printf("Received message: %v\n", message.Certs)
+			onMegReceived(message.Certs)
 		}
-		log.Printf("Received message: %v\n", message.Certs)
-		onMegReceived(message.Certs)
-	}
+	}()
 
 	return nil
 }

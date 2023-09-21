@@ -1,4 +1,4 @@
-package main
+package gateway
 
 import (
 	"cert-gateway/gateway/internal/cache"
@@ -6,17 +6,14 @@ import (
 	"cert-gateway/gateway/internal/handler"
 	"cert-gateway/gateway/internal/syncx"
 	"cert-gateway/utils"
-	"flag"
 	"fmt"
 	"log"
 	"time"
 )
 
-func main() {
+func Run(conPath string) {
 
-	var configFile = flag.String("f", "etc/config.yaml", "the config file")
-
-	utils.MustLoad(configFile, config.C)
+	utils.MustLoad(&conPath, config.C)
 	cache.Init(config.C)
 
 	go syncx.Init(config.C)

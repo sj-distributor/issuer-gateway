@@ -1,7 +1,7 @@
 package driver
 
 import (
-	"cert-gateway/bus/pb"
+	"cert-gateway/grpc/pb"
 	"context"
 	"fmt"
 	"github.com/go-jose/go-jose/v3/json"

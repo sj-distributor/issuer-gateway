@@ -3,8 +3,12 @@ package config
 var C = &Config{}
 
 type Config struct {
-	IssuerAddr string
-	Secret     string
+	Env    string
+	Secret string
+
+	Gateway struct {
+		IssuerAddr string
+	}
 
 	Sync struct {
 		Target string
