@@ -1,9 +1,9 @@
 package modules
 
 import (
-	"cert-gateway/issuer"
 	"errors"
 	"github.com/spf13/cobra"
+	"issuer-gateway/issuer"
 )
 
 var IssuerCommand = &cobra.Command{

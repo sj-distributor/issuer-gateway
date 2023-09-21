@@ -1,13 +1,13 @@
 package cert
 
 import (
-	"cert-gateway/issuer/internal/database/entity"
-	"cert-gateway/pkg/acme"
 	"context"
 	"github.com/go-acme/lego/v4/certificate"
+	"issuer-gateway/issuer/internal/database/entity"
+	"issuer-gateway/pkg/acme"
 
-	"cert-gateway/issuer/internal/svc"
-	"cert-gateway/issuer/internal/types"
+	"issuer-gateway/issuer/internal/svc"
+	"issuer-gateway/issuer/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

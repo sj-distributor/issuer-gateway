@@ -1,12 +1,12 @@
 package gateway
 
 import (
-	"cert-gateway/gateway/internal/cache"
-	"cert-gateway/gateway/internal/config"
-	"cert-gateway/gateway/internal/handler"
-	"cert-gateway/gateway/internal/syncx"
-	"cert-gateway/utils"
 	"fmt"
+	"issuer-gateway/gateway/internal/cache"
+	"issuer-gateway/gateway/internal/config"
+	"issuer-gateway/gateway/internal/handler"
+	"issuer-gateway/gateway/internal/syncx"
+	"issuer-gateway/utils"
 	"log"
 	"time"
 )

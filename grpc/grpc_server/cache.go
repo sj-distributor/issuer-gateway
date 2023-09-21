@@ -1,7 +1,7 @@
 package grpc_server
 
 import (
-	"cert-gateway/grpc/pb"
+	"issuer-gateway/grpc/pb"
 	"sync"
 )
 

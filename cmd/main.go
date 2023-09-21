@@ -1,9 +1,9 @@
 package main
 
 import (
-	"cert-gateway/cmd/modules"
 	"fmt"
 	"github.com/spf13/cobra"
+	"issuer-gateway/cmd/modules"
 	"log"
 	"strings"
 	"time"

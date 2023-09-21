@@ -1,17 +1,17 @@
 package issuer
 
 import (
-	"cert-gateway/issuer/internal/config"
-	"cert-gateway/issuer/internal/database"
-	"cert-gateway/issuer/internal/errs"
-	"cert-gateway/issuer/internal/handler"
-	"cert-gateway/issuer/internal/svc"
-	"cert-gateway/issuer/middleware"
-	"cert-gateway/pkg/acme"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
 	xhttp "github.com/zeromicro/x/http"
+	"issuer-gateway/issuer/internal/config"
+	"issuer-gateway/issuer/internal/database"
+	"issuer-gateway/issuer/internal/errs"
+	"issuer-gateway/issuer/internal/handler"
+	"issuer-gateway/issuer/internal/svc"
+	"issuer-gateway/issuer/middleware"
+	"issuer-gateway/pkg/acme"
 	"net/http"
 )
 

@@ -1,12 +1,12 @@
 package user
 
 import (
-	"cert-gateway/issuer/internal/errs"
-	"cert-gateway/issuer/internal/svc"
-	"cert-gateway/issuer/internal/types"
-	"cert-gateway/utils"
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
+	"issuer-gateway/issuer/internal/errs"
+	"issuer-gateway/issuer/internal/svc"
+	"issuer-gateway/issuer/internal/types"
+	"issuer-gateway/utils"
 )
 
 type UserLoginLogic struct {

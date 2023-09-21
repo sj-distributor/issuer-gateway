@@ -1,8 +1,8 @@
 package modules
 
 import (
-	"cert-gateway/gateway"
 	"github.com/spf13/cobra"
+	"issuer-gateway/gateway"
 )
 
 var GatewayCommand = &cobra.Command{

@@ -1,9 +1,9 @@
 package hooks
 
 import (
-	"cert-gateway/utils"
 	"context"
 	"gorm.io/gorm"
+	"issuer-gateway/utils"
 	"reflect"
 )
 

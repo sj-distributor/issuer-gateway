@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"cert-gateway/gateway/internal/cache"
-	"cert-gateway/gateway/internal/config"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
+	"issuer-gateway/gateway/internal/cache"
+	"issuer-gateway/gateway/internal/config"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -55,7 +55,7 @@ func ReverseProxyOrRedirect(w http.ResponseWriter, r *http.Request) {
 }
 
 func AcceptChallenge(c *config.Config) http.HandlerFunc {
-	
+
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		target, _ := url.Parse(c.Gateway.IssuerAddr)

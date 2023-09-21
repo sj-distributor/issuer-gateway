@@ -1,11 +1,11 @@
 package cache
 
 import (
-	"cert-gateway/gateway/internal/config"
-	"cert-gateway/pkg/acme"
 	"crypto/tls"
 	"fmt"
 	"github.com/dgraph-io/ristretto"
+	"issuer-gateway/gateway/internal/config"
+	"issuer-gateway/pkg/acme"
 	"log"
 )
 

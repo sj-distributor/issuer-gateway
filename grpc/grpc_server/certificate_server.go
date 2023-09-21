@@ -1,13 +1,13 @@
 package grpc_server
 
 import (
-	"cert-gateway/grpc/pb"
 	"context"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/x/errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
+	"issuer-gateway/grpc/pb"
 	"log"
 	"sync"
 )
@@ -35,7 +35,7 @@ func (s *CertificatePubSubServer) SyncCertificateToProvider(_ context.Context, c
 // SendCertificateToGateway 发送证书同步给某个 Gateway
 func (s *CertificatePubSubServer) SendCertificateToGateway(_ context.Context, req *pb.SubscribeRequest) (*pb.Empty, error) {
 	gatewayIp := req.LocalIp
-	
+
 	s.mu.Lock()
 	stream := s.gateways[gatewayIp]
 	s.mu.Unlock()

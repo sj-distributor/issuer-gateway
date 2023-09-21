@@ -1,11 +1,11 @@
 package driver
 
 import (
-	"cert-gateway/grpc/pb"
 	"context"
 	"fmt"
 	"github.com/go-jose/go-jose/v3/json"
 	"github.com/redis/go-redis/v9"
+	"issuer-gateway/grpc/pb"
 	"log"
 	"sync"
 )

@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	"cert-gateway/issuer/internal/config"
-	"cert-gateway/issuer/internal/errs"
-	"cert-gateway/utils"
 	xhttp "github.com/zeromicro/x/http"
+	"issuer-gateway/issuer/internal/config"
+	"issuer-gateway/issuer/internal/errs"
+	"issuer-gateway/utils"
 	"net/http"
 	"strings"
 )

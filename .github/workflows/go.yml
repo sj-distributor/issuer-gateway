@@ -56,6 +56,6 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -f ./Dockerfile -t gofee/issuer-gateway:${{ steps.gitversion.outputs.semVer }} .
+          docker build -f ./Dockerfile -t gofee/issuer-gateway:v${{ steps.gitversion.outputs.semVer }} .
           
-#          docker push gofee/issuer-gateway:${{ steps.gitversion.outputs.semVer }}
+#          docker push gofee/issuer-gateway:v${{ steps.gitversion.outputs.semVer }}

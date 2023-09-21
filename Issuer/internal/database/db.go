@@ -1,9 +1,9 @@
 package database
 
 import (
-	"cert-gateway/issuer/internal/config"
-	"cert-gateway/issuer/internal/database/entity"
-	"cert-gateway/issuer/internal/database/hooks"
+	"issuer-gateway/issuer/internal/config"
+	"issuer-gateway/issuer/internal/database/entity"
+	"issuer-gateway/issuer/internal/database/hooks"
 	"log"
 	"time"
 

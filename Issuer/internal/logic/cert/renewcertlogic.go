@@ -1,15 +1,15 @@
 package cert
 
 import (
-	"cert-gateway/grpc/pb"
-	"cert-gateway/issuer/internal/database/entity"
-	"cert-gateway/issuer/internal/errs"
-	"cert-gateway/pkg/acme"
 	"context"
 	"gorm.io/gorm"
+	"issuer-gateway/grpc/pb"
+	"issuer-gateway/issuer/internal/database/entity"
+	"issuer-gateway/issuer/internal/errs"
+	"issuer-gateway/pkg/acme"
 
-	"cert-gateway/issuer/internal/svc"
-	"cert-gateway/issuer/internal/types"
+	"issuer-gateway/issuer/internal/svc"
+	"issuer-gateway/issuer/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

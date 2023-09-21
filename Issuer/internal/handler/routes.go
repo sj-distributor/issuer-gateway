@@ -4,9 +4,9 @@ package handler
 import (
 	"net/http"
 
-	cert "cert-gateway/issuer/internal/handler/cert"
-	user "cert-gateway/issuer/internal/handler/user"
-	"cert-gateway/issuer/internal/svc"
+	cert "issuer-gateway/issuer/internal/handler/cert"
+	user "issuer-gateway/issuer/internal/handler/user"
+	"issuer-gateway/issuer/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )

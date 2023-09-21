@@ -3,12 +3,12 @@ package cert
 import (
 	"net/http"
 
-	"cert-gateway/issuer/internal/logic/cert"
-	"cert-gateway/issuer/internal/svc"
-	"cert-gateway/issuer/internal/types"
 	"github.com/go-playground/validator/v10"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	xhttp "github.com/zeromicro/x/http"
+	"issuer-gateway/issuer/internal/logic/cert"
+	"issuer-gateway/issuer/internal/svc"
+	"issuer-gateway/issuer/internal/types"
 )
 
 func AddCertHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {

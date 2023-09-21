@@ -1,14 +1,14 @@
 package syncx
 
 import (
-	"cert-gateway/gateway/internal/cache"
-	"cert-gateway/gateway/internal/config"
-	"cert-gateway/grpc/pb"
-	"cert-gateway/pkg/driver"
-	"cert-gateway/utils"
 	"context"
 	"fmt"
 	"google.golang.org/grpc/metadata"
+	"issuer-gateway/gateway/internal/cache"
+	"issuer-gateway/gateway/internal/config"
+	"issuer-gateway/grpc/pb"
+	"issuer-gateway/pkg/driver"
+	"issuer-gateway/utils"
 	"log"
 	"os"
 	"time"

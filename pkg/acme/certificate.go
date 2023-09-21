@@ -1,12 +1,12 @@
 package acme
 
 import (
-	"cert-gateway/utils"
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
 	"fmt"
 	"github.com/go-acme/lego/v4/certificate"
+	"issuer-gateway/utils"
 	"time"
 )
 

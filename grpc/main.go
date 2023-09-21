@@ -1,9 +1,9 @@
 package grpcServer
 
 import (
-	"cert-gateway/grpc/config"
-	"cert-gateway/pkg/driver"
-	"cert-gateway/utils"
+	"issuer-gateway/grpc/config"
+	"issuer-gateway/pkg/driver"
+	"issuer-gateway/utils"
 	"strings"
 )
 

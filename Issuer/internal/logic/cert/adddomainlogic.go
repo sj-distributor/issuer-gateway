@@ -1,10 +1,10 @@
 package cert
 
 import (
-	"cert-gateway/issuer/internal/database/entity"
-	"cert-gateway/issuer/internal/svc"
-	"cert-gateway/issuer/internal/types"
 	"context"
+	"issuer-gateway/issuer/internal/database/entity"
+	"issuer-gateway/issuer/internal/svc"
+	"issuer-gateway/issuer/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

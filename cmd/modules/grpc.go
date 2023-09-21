@@ -1,8 +1,8 @@
 package modules
 
 import (
-	"cert-gateway/grpc"
 	"github.com/spf13/cobra"
+	"issuer-gateway/grpc"
 )
 
 var GrpcCommand = &cobra.Command{

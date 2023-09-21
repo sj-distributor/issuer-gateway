@@ -1,6 +1,6 @@
 package driver
 
-import "cert-gateway/grpc/pb"
+import "issuer-gateway/grpc/pb"
 
 var (
 	GRPC  = "GRPC"

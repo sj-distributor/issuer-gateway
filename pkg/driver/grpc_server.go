@@ -1,10 +1,10 @@
 package driver
 
 import (
-	"cert-gateway/grpc/grpc_server"
-	"cert-gateway/grpc/pb"
 	"fmt"
 	"google.golang.org/grpc"
+	"issuer-gateway/grpc/grpc_server"
+	"issuer-gateway/grpc/pb"
 	"log"
 	"net"
 )
