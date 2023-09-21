@@ -3,7 +3,7 @@ temp:
 	cp -f template/handler.tpl ~/.goctl/1.5.4/api/handler.tpl
 
 doc:
-	rm -rf ./issuer/doc/* && goctl api doc --dir="./issuer" --o="./issuer/doc"
+	rm -rf ./issuer/docs/* && goctl api doc --dir="./issuer" --o="./issuer/docs"
 
 test:
 	go test -v ./...

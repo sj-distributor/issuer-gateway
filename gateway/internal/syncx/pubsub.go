@@ -1,9 +1,9 @@
 package syncx
 
 import (
-	"cert-gateway/bus/pb"
 	"cert-gateway/gateway/internal/cache"
 	"cert-gateway/gateway/internal/config"
+	"cert-gateway/grpc/pb"
 	"cert-gateway/pkg/driver"
 	"cert-gateway/utils"
 	"context"
@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"log"
 	"os"
+	"time"
 )
 
 var GlobalPubSub driver.IProvider
@@ -24,19 +25,22 @@ func Init(c *config.Config) {
 	switch c.Sync.Target {
 	case driver.GRPC:
 		ctx := metadata.NewOutgoingContext(context.Background(), metadata.Pairs("Authorization", "Bearer "+c.Secret))
-
-		GlobalPubSub = driver.NewGrpcClient(c.Sync.Grpc.Addr, ctx)
+		GlobalPubSub = driver.NewGrpcClient(c.Sync.GrpcClient.Listen, ctx)
 		err := GlobalPubSub.GatewaySubscribe(podId, handlerMessage, func(err error) {
 			log.Println(err)
 		})
 		if err != nil {
 			log.Panicln(fmt.Sprintf("Grpc init fail: %s", err.Error()))
 		}
-
-		err = GlobalPubSub.SendCertificateToGateway(podId)
-		if err != nil {
-			log.Panicln(fmt.Sprintf("Grpc init fail: %s", err.Error()))
+		tick := time.Tick(time.Second * 1)
+		select {
+		case <-tick:
+			err = GlobalPubSub.SendCertificateToGateway(podId)
+			if err != nil {
+				log.Panicln(fmt.Sprintf("Grpc init fail: %s", err.Error()))
+			}
 		}
+
 	case driver.REDIS:
 		redis := c.Sync.Redis
 

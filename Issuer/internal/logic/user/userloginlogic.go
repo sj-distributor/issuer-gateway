@@ -24,7 +24,7 @@ func NewUserLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserLog
 }
 
 func (l *UserLoginLogic) UserLogin(req *types.UserLoginReq) (resp *types.UserLoginResp, err error) {
-	user := l.svcCtx.Config.User
+	user := l.svcCtx.Config.Issuer.User
 	jwt, err := utils.GenJwt(req.Pass, req.Name, l.svcCtx.Config.JWTSecret, l.svcCtx.Config.Secret)
 
 	if req.Name == user.Name && req.Pass == user.Pass {

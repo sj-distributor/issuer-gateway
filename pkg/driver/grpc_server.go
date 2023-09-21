@@ -1,8 +1,8 @@
 package driver
 
 import (
-	"cert-gateway/bus/grpc_server"
-	"cert-gateway/bus/pb"
+	"cert-gateway/grpc/grpc_server"
+	"cert-gateway/grpc/pb"
 	"fmt"
 	"google.golang.org/grpc"
 	"log"
@@ -21,14 +21,14 @@ func NewGrpcServiceAndListen(addr string) {
 	certificatePubSubServer := grpc_server.NewCertificatePubSubServer()
 
 	// 监听 gRPC 服务端口
-	lis, err := net.Listen("tcp", addr)
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", addr))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	// 注册发布者服务到 gRPC 服务器
 	pb.RegisterCertificateServiceServer(grpcServer, certificatePubSubServer)
 
-	fmt.Printf("Server is listening on : %s", addr)
+	fmt.Printf("Grpc Server is listening on : %s\n", addr)
 	// 启动 gRPC 服务器
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

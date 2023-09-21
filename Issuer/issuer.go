@@ -1,4 +1,4 @@
-package main
+package issuer
 
 import (
 	"cert-gateway/issuer/internal/config"
@@ -8,7 +8,6 @@ import (
 	"cert-gateway/issuer/internal/svc"
 	"cert-gateway/issuer/middleware"
 	"cert-gateway/pkg/acme"
-	"flag"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
@@ -16,18 +15,14 @@ import (
 	"net/http"
 )
 
-func main() {
-
-	var configFile = flag.String("f", "etc/issuer-api.yaml", "the config file")
-
-	flag.Parse()
+func Run(conPath string) {
 
 	var c config.Config
-	conf.MustLoad(*configFile, &c)
+	conf.MustLoad(conPath, &c)
 
 	database.Init(&c)
 
-	server := rest.MustNewServer(c.RestConf,
+	server := rest.MustNewServer(c.Issuer.RestConf,
 		middleware.Cors(),
 		rest.WithNotFoundHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			xhttp.JsonBaseResponseCtx(r.Context(), w, errs.NotFoundException)
@@ -45,7 +40,7 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
 
-	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
+	fmt.Printf("Starting server at %s:%d...\n", c.Issuer.Host, c.Issuer.Port)
 
 	server.Start()
 }

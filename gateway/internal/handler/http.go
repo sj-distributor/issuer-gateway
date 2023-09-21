@@ -14,7 +14,6 @@ func Http(c *config.Config) {
 
 		mux.HandleFunc("/", ReverseProxyOrRedirect)
 		mux.HandleFunc("/.well-known/acme-challenge/", AcceptChallenge(c))
-
 		server := &http.Server{
 			Addr:    ":80",
 			Handler: mux,
@@ -25,5 +24,6 @@ func Http(c *config.Config) {
 		if err != nil {
 			log.Fatalln(err)
 		}
+
 	}()
 }

@@ -55,11 +55,12 @@ func ReverseProxyOrRedirect(w http.ResponseWriter, r *http.Request) {
 }
 
 func AcceptChallenge(c *config.Config) http.HandlerFunc {
+	
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		target, _ := url.Parse(c.IssuerAddr)
+		target, _ := url.Parse(c.Gateway.IssuerAddr)
 
-		fmt.Println(target.Hostname())
+		logx.Infov(target.Hostname())
 
 		targetUrl := fmt.Sprintf("http://%s:5001%s", target.Hostname(), r.RequestURI)
 

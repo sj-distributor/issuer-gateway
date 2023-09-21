@@ -1,0 +1,45 @@
+Env: debug
+Secret: 66d2e42661bc292f8237b4736a423a36
+JWTSecret: F2NFhljyALXM86x
+
+Sync:
+  #  GRPC
+  #  REDIS
+  #  ETCD
+  #  AMQP
+  Target: GRPC
+  GrpcServer:
+    Port: 9527
+  GrpcClient:
+    Listen: 0.0.0.0:9527 # grpc server addr
+  Redis:
+    Addrs: [ "192.167.167.167:6379" ]
+    User: ""
+    Pass: ""
+    MasterName: ""
+    DB: 0
+
+
+Issuer:
+  Name: issuer-api
+  Host: 0.0.0.0
+  Port: 9090
+
+  DevServer:
+    Enabled: true
+
+  User:
+    Name: anson@test.com
+    Pass: "000000"
+
+  Mysql:
+    Dns: root:123456@tcp(192.167.167.167:3306)/cert-gateway?charset=utf8mb4&parseTime=true
+    Migration:
+      Path: "internal/database/migration"
+      Db: "cert-gateway"
+
+
+
+
+Gateway:
+  IssuerAddr: k8s cert service

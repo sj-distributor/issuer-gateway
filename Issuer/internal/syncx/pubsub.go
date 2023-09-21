@@ -1,7 +1,7 @@
 package syncx
 
 import (
-	"cert-gateway/bus/pb"
+	"cert-gateway/grpc/pb"
 	"cert-gateway/issuer/internal/config"
 	"cert-gateway/issuer/internal/database"
 	"cert-gateway/issuer/internal/database/entity"
@@ -22,7 +22,7 @@ func Init(c *config.Config) driver.IProvider {
 			context.Background(),
 			metadata.Pairs("Authorization", "Bearer "+c.Secret))
 
-		provider = driver.NewGrpcClient(c.Sync.Grpc.Addr, ctx)
+		provider = driver.NewGrpcClient(c.Sync.GrpcClient.Listen, ctx)
 		break
 	case driver.REDIS:
 		redis := c.Sync.Redis
@@ -30,7 +30,7 @@ func Init(c *config.Config) driver.IProvider {
 		break
 	}
 
-	setUpCertificate(provider)
+	go setUpCertificate(provider)
 
 	return provider
 }

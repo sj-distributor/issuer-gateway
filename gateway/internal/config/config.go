@@ -1,15 +1,22 @@
 package config
 
+import "github.com/zeromicro/go-zero/rest"
+
 var C = &Config{}
 
 type Config struct {
-	IssuerAddr string
-	Secret     string
+	Env    string
+	Secret string
+
+	Gateway struct {
+		rest.RestConf
+		IssuerAddr string
+	}
 
 	Sync struct {
-		Target string
-		Grpc   struct {
-			Addr string
+		Target     string
+		GrpcClient struct {
+			Listen string
 		}
 		Redis struct {
 			Addrs      []string

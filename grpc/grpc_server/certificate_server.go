@@ -1,7 +1,7 @@
 package grpc_server
 
 import (
-	"cert-gateway/bus/pb"
+	"cert-gateway/grpc/pb"
 	"context"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -35,8 +35,11 @@ func (s *CertificatePubSubServer) SyncCertificateToProvider(_ context.Context, c
 // SendCertificateToGateway 发送证书同步给某个 Gateway
 func (s *CertificatePubSubServer) SendCertificateToGateway(_ context.Context, req *pb.SubscribeRequest) (*pb.Empty, error) {
 	gatewayIp := req.LocalIp
-
+	
+	s.mu.Lock()
 	stream := s.gateways[gatewayIp]
+	s.mu.Unlock()
+
 	if stream == nil {
 		return &pb.Empty{}, errors.New(404, fmt.Sprintf("gateway ip: %s,  not found", gatewayIp))
 	}

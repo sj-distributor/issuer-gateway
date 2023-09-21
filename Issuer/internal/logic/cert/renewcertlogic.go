@@ -1,7 +1,7 @@
 package cert
 
 import (
-	"cert-gateway/bus/pb"
+	"cert-gateway/grpc/pb"
 	"cert-gateway/issuer/internal/database/entity"
 	"cert-gateway/issuer/internal/errs"
 	"cert-gateway/pkg/acme"
