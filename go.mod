@@ -1,4 +1,4 @@
-module issuer-gateway
+module github.com/pygzfei/issuer-gateway
 
 go 1.20
 
