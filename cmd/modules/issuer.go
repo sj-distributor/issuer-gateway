@@ -14,11 +14,11 @@ var IssuerCommand = &cobra.Command{
 		if conPath == "" {
 			return errors.New("config file is required! run: ig issuer -h")
 		}
-		issuer.Run(conPath)
+		Issuer.Run(conPath)
 		return nil
 	},
 }
 
 func RunIssuerService(conPath string) {
-	issuer.Run(conPath)
+	Issuer.Run(conPath)
 }
