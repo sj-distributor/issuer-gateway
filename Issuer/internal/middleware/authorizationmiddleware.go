@@ -1,10 +1,10 @@
 package middleware
 
 import (
+	"github.com/pygzfei/issuer-gateway/issuer/internal/config"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/errs"
+	"github.com/pygzfei/issuer-gateway/utils"
 	xhttp "github.com/zeromicro/x/http"
-	"issuer-gateway/issuer/internal/config"
-	"issuer-gateway/issuer/internal/errs"
-	"issuer-gateway/utils"
 	"net/http"
 	"strings"
 )

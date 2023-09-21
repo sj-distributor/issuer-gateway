@@ -1,7 +1,7 @@
 package grpc_server
 
 import (
-	"issuer-gateway/grpc/pb"
+	"github.com/pygzfei/issuer-gateway/grpc/pb"
 	"sync"
 )
 

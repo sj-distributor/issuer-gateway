@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-acme/lego/v4/certificate"
-	"issuer-gateway/utils"
+	"github.com/pygzfei/issuer-gateway/utils"
 	"time"
 )
 

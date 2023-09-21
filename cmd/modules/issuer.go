@@ -2,8 +2,8 @@ package modules
 
 import (
 	"errors"
+	"github.com/pygzfei/issuer-gateway/issuer"
 	"github.com/spf13/cobra"
-	"issuer-gateway/issuer"
 )
 
 var IssuerCommand = &cobra.Command{

@@ -2,9 +2,9 @@ package handler
 
 import (
 	"fmt"
+	"github.com/pygzfei/issuer-gateway/gateway/internal/cache"
+	"github.com/pygzfei/issuer-gateway/gateway/internal/config"
 	"github.com/zeromicro/go-zero/core/logx"
-	"issuer-gateway/gateway/internal/cache"
-	"issuer-gateway/gateway/internal/config"
 	"net/http"
 	"net/http/httputil"
 	"net/url"

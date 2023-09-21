@@ -1,6 +1,6 @@
 package driver
 
-import "issuer-gateway/grpc/pb"
+import "github.com/pygzfei/issuer-gateway/grpc/pb"
 
 var (
 	GRPC  = "GRPC"

@@ -2,9 +2,9 @@ package cert
 
 import (
 	"context"
-	"issuer-gateway/issuer/internal/database/entity"
-	"issuer-gateway/issuer/internal/svc"
-	"issuer-gateway/issuer/internal/types"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/database/entity"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/svc"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

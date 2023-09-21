@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"issuer-gateway/gateway/internal/config"
-	"issuer-gateway/utils"
+	"github.com/pygzfei/issuer-gateway/gateway/internal/config"
+	"github.com/pygzfei/issuer-gateway/utils"
 	"log"
 	"net/http"
 	"time"

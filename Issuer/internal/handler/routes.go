@@ -4,9 +4,9 @@ package handler
 import (
 	"net/http"
 
-	cert "issuer-gateway/issuer/internal/handler/cert"
-	user "issuer-gateway/issuer/internal/handler/user"
-	"issuer-gateway/issuer/internal/svc"
+	cert "github.com/pygzfei/issuer-gateway/issuer/internal/handler/cert"
+	user "github.com/pygzfei/issuer-gateway/issuer/internal/handler/user"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )

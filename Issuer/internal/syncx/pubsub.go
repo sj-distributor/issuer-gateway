@@ -2,12 +2,12 @@ package syncx
 
 import (
 	"context"
+	"github.com/pygzfei/issuer-gateway/grpc/pb"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/config"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/database"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/database/entity"
+	"github.com/pygzfei/issuer-gateway/pkg/driver"
 	"google.golang.org/grpc/metadata"
-	"issuer-gateway/grpc/pb"
-	"issuer-gateway/issuer/internal/config"
-	"issuer-gateway/issuer/internal/database"
-	"issuer-gateway/issuer/internal/database/entity"
-	"issuer-gateway/pkg/driver"
 	"log"
 	"time"
 )

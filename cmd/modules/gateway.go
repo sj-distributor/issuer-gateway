@@ -1,8 +1,8 @@
 package modules
 
 import (
+	"github.com/pygzfei/issuer-gateway/gateway"
 	"github.com/spf13/cobra"
-	"issuer-gateway/gateway"
 )
 
 var GatewayCommand = &cobra.Command{

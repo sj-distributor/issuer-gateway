@@ -3,11 +3,10 @@ package cert
 import (
 	"context"
 	"github.com/go-acme/lego/v4/certificate"
-	"issuer-gateway/issuer/internal/database/entity"
-	"issuer-gateway/pkg/acme"
-
-	"issuer-gateway/issuer/internal/svc"
-	"issuer-gateway/issuer/internal/types"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/database/entity"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/svc"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/types"
+	"github.com/pygzfei/issuer-gateway/pkg/acme"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

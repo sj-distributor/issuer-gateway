@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-	"issuer-gateway/gateway/internal/cache"
+	"github.com/pygzfei/issuer-gateway/gateway/internal/cache"
 )
 
 func CertificateInject(info *tls.ClientHelloInfo) (*tls.Certificate, error) {

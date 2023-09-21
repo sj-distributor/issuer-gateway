@@ -1,8 +1,8 @@
 package modules
 
 import (
+	"github.com/pygzfei/issuer-gateway/grpc"
 	"github.com/spf13/cobra"
-	"issuer-gateway/grpc"
 )
 
 var GrpcCommand = &cobra.Command{

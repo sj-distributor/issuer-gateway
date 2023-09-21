@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/pygzfei/issuer-gateway/cmd/modules"
 	"github.com/spf13/cobra"
-	"issuer-gateway/cmd/modules"
 	"log"
 	"strings"
 	"time"

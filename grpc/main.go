@@ -1,9 +1,9 @@
 package grpcServer
 
 import (
-	"issuer-gateway/grpc/config"
-	"issuer-gateway/pkg/driver"
-	"issuer-gateway/utils"
+	"github.com/pygzfei/issuer-gateway/grpc/config"
+	"github.com/pygzfei/issuer-gateway/pkg/driver"
+	"github.com/pygzfei/issuer-gateway/utils"
 	"strings"
 )
 

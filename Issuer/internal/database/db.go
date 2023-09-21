@@ -1,9 +1,9 @@
 package database
 
 import (
-	"issuer-gateway/issuer/internal/config"
-	"issuer-gateway/issuer/internal/database/entity"
-	"issuer-gateway/issuer/internal/database/hooks"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/config"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/database/entity"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/database/hooks"
 	"log"
 	"time"
 

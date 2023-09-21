@@ -2,9 +2,9 @@ package driver
 
 import (
 	"context"
+	"github.com/pygzfei/issuer-gateway/grpc/pb"
 	"google.golang.org/grpc"
 	"io"
-	"issuer-gateway/grpc/pb"
 	"log"
 )
 

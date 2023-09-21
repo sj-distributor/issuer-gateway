@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/logic/user"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/svc"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	xhttp "github.com/zeromicro/x/http"
-	"issuer-gateway/issuer/internal/logic/user"
-	"issuer-gateway/issuer/internal/svc"
-	"issuer-gateway/issuer/internal/types"
 )
 
 func UserLoginHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {

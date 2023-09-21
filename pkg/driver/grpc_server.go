@@ -2,9 +2,9 @@ package driver
 
 import (
 	"fmt"
+	"github.com/pygzfei/issuer-gateway/grpc/grpc_server"
+	"github.com/pygzfei/issuer-gateway/grpc/pb"
 	"google.golang.org/grpc"
-	"issuer-gateway/grpc/grpc_server"
-	"issuer-gateway/grpc/pb"
 	"log"
 	"net"
 )

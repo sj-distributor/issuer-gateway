@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-jose/go-jose/v3/json"
+	"github.com/pygzfei/issuer-gateway/grpc/pb"
 	"github.com/redis/go-redis/v9"
-	"issuer-gateway/grpc/pb"
 	"log"
 	"sync"
 )

@@ -2,11 +2,11 @@ package user
 
 import (
 	"context"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/errs"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/svc"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/types"
+	"github.com/pygzfei/issuer-gateway/utils"
 	"github.com/zeromicro/go-zero/core/logx"
-	"issuer-gateway/issuer/internal/errs"
-	"issuer-gateway/issuer/internal/svc"
-	"issuer-gateway/issuer/internal/types"
-	"issuer-gateway/utils"
 )
 
 type UserLoginLogic struct {

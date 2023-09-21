@@ -1,13 +1,13 @@
 package svc
 
 import (
+	"github.com/pygzfei/issuer-gateway/issuer/internal/config"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/database"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/middleware"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/syncx"
+	"github.com/pygzfei/issuer-gateway/pkg/driver"
 	"github.com/zeromicro/go-zero/rest"
 	"gorm.io/gorm"
-	"issuer-gateway/issuer/internal/config"
-	"issuer-gateway/issuer/internal/database"
-	"issuer-gateway/issuer/internal/middleware"
-	"issuer-gateway/issuer/internal/syncx"
-	"issuer-gateway/pkg/driver"
 )
 
 type ServiceContext struct {

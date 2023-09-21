@@ -2,11 +2,11 @@ package gateway
 
 import (
 	"fmt"
-	"issuer-gateway/gateway/internal/cache"
-	"issuer-gateway/gateway/internal/config"
-	"issuer-gateway/gateway/internal/handler"
-	"issuer-gateway/gateway/internal/syncx"
-	"issuer-gateway/utils"
+	"github.com/pygzfei/issuer-gateway/gateway/internal/cache"
+	"github.com/pygzfei/issuer-gateway/gateway/internal/config"
+	"github.com/pygzfei/issuer-gateway/gateway/internal/handler"
+	"github.com/pygzfei/issuer-gateway/gateway/internal/syncx"
+	"github.com/pygzfei/issuer-gateway/utils"
 	"log"
 	"time"
 )
