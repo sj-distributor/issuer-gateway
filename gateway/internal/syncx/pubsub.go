@@ -25,7 +25,7 @@ func Init(c *config.Config) {
 	switch c.Sync.Target {
 	case driver.GRPC:
 		ctx := metadata.NewOutgoingContext(context.Background(), metadata.Pairs("Authorization", "Bearer "+c.Secret))
-		GlobalPubSub = driver.NewGrpcClient(c.Sync.Grpc.Addr, ctx)
+		GlobalPubSub = driver.NewGrpcClient(c.Sync.GrpcClient.Listen, ctx)
 		err := GlobalPubSub.GatewaySubscribe(podId, handlerMessage, func(err error) {
 			log.Println(err)
 		})

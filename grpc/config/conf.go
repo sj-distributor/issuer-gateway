@@ -5,9 +5,9 @@ type Config struct {
 	Secret string
 
 	Sync struct {
-		Target string
-		Grpc   struct {
-			Addr string
+		Target     string
+		GrpcServer struct {
+			Port string
 		}
 	}
 }

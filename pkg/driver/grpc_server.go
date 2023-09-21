@@ -21,7 +21,7 @@ func NewGrpcServiceAndListen(addr string) {
 	certificatePubSubServer := grpc_server.NewCertificatePubSubServer()
 
 	// 监听 gRPC 服务端口
-	lis, err := net.Listen("tcp", addr)
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", addr))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

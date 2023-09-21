@@ -11,9 +11,10 @@ import (
 	"time"
 )
 
-func Run(conPath string) {
+func Run(confPath string) {
 
-	utils.MustLoad(&conPath, config.C)
+	utils.MustLoad(&confPath, config.C)
+
 	cache.Init(config.C)
 
 	go syncx.Init(config.C)

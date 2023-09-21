@@ -22,7 +22,7 @@ func Init(c *config.Config) driver.IProvider {
 			context.Background(),
 			metadata.Pairs("Authorization", "Bearer "+c.Secret))
 
-		provider = driver.NewGrpcClient(c.Sync.Grpc.Addr, ctx)
+		provider = driver.NewGrpcClient(c.Sync.GrpcClient.Listen, ctx)
 		break
 	case driver.REDIS:
 		redis := c.Sync.Redis

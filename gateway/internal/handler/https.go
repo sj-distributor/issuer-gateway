@@ -8,7 +8,6 @@ import (
 func Https() *http.Server {
 
 	mux := http.NewServeMux()
-
 	mux.HandleFunc("/", ReverseProxyHandler)
 
 	server := &http.Server{

@@ -8,20 +8,18 @@ RUN apk update --no-cache && apk add --no-cache tzdata
 USER root
 WORKDIR /build
 
-RUN go mod download
 COPY . .
-COPY ./gateway/etc /app/gateway
-COPY ./issuer/etc /app/issuer
+RUN go mod download
 
-RUN go build -ldflags="-s -w" -o ./ig ./cmd/main.go
+COPY ./conf /app/conf
+
+RUN go build -ldflags="-s -w" -o /app/ig ./cmd/main.go
 
 
 FROM scratch
 
 WORKDIR /app
-COPY --from=builder /app/gateway /app/gateway
-COPY --from=builder /app/etc /app/etc
+COPY --from=builder /app/conf /app/conf
+COPY --from=builder /app/ig /app/ig
 
-EXPOSE 80 443
-
-CMD ["./ig", "-f", "etc/config.yaml"]
+CMD ["/app/ig"]

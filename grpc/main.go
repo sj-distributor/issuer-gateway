@@ -11,6 +11,6 @@ func Run(confPath string) {
 	var c conf.Config
 	utils.MustLoad(&confPath, &c)
 	if strings.ToUpper(c.Sync.Target) == "GRPC" {
-		driver.NewGrpcServiceAndListen(c.Sync.Grpc.Addr)
+		driver.NewGrpcServiceAndListen(c.Sync.GrpcServer.Port)
 	}
 }

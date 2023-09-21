@@ -25,9 +25,9 @@ type Config struct {
 	}
 
 	Sync struct {
-		Target string
-		Grpc   struct {
-			Addr string
+		Target     string
+		GrpcClient struct {
+			Listen string
 		}
 		Redis struct {
 			Addrs      []string
