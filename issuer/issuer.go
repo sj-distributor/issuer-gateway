@@ -1,4 +1,4 @@
-package Issuer
+package issuer
 
 import (
 	"fmt"
