@@ -1,6 +1,6 @@
 module github.com/pygzfei/issuer-gateway
 
-go 1.20
+go 1.21
 
 require (
 	github.com/dgraph-io/ristretto v0.1.1
