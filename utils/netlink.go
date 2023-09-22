@@ -18,7 +18,7 @@ func GetLocalId() string {
 	for _, iface := range interfaces {
 		addrs, err := iface.Addrs()
 		if err != nil {
-			logx.Infof("无法获取接口 %s 的IP地址：%v", iface.Name, err)
+			logx.Errorf("无法获取接口 %s 的IP地址：%v", iface.Name, err)
 			continue
 		}
 
@@ -26,7 +26,7 @@ func GetLocalId() string {
 		for _, addr := range addrs {
 			ip, _, err := net.ParseCIDR(addr.String())
 			if err != nil {
-				logx.Infof("无法解析IP地址：%v", err)
+				logx.Errorf("无法解析IP地址：%v", err)
 				continue
 			}
 
