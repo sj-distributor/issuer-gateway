@@ -10,7 +10,7 @@ func GetLocalId() string {
 	// 获取本机的所有网络接口
 	interfaces, err := net.Interfaces()
 	if err != nil {
-		logx.Infof("无法获取网络接口:", err)
+		logx.Errorf("无法获取网络接口: %s", err)
 		return ""
 	}
 
