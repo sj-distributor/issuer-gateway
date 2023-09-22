@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"github.com/go-playground/assert/v2"
 	"testing"
 )
@@ -15,6 +16,7 @@ func TestId(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := Id()
+			fmt.Println(got, tt.want)
 			if got == tt.want {
 				t.Errorf("Id() = %v, want %v", got, tt.want)
 			}
