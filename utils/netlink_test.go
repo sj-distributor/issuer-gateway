@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"github.com/go-playground/assert/v2"
 	"testing"
 )
@@ -14,7 +15,8 @@ func TestGetLocalId(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := GetLocalId()
+			got := GetLocalIP()
+			fmt.Printf("localip: %s \n", got)
 			if got == tt.want {
 				t.Errorf("GetLocalId() = %v, want %v", got, tt.want)
 			}

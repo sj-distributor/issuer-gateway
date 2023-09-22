@@ -6,7 +6,7 @@ import (
 	"net"
 )
 
-func GetLocalId() string {
+func GetLocalIP() string {
 	// 获取本机的所有网络接口
 	interfaces, err := net.Interfaces()
 	if err != nil {
