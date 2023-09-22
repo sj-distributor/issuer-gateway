@@ -10,11 +10,24 @@ import (
 	"net/url"
 )
 
+func HttpMiddleware(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		logx.Infow(r.RemoteAddr,
+			logx.Field("Method", r.Method),
+			logx.Field("Host", r.Host),
+			logx.Field("URL", r.URL),
+			logx.Field("Header", r.Header),
+		)
+		next(w, r)
+	}
+}
+
 // ReverseProxyHandler 根据证书配置的反向代理
 func ReverseProxyHandler(w http.ResponseWriter, r *http.Request) {
 	if cert, ok := cache.GlobalCache.Get(r.Host); ok {
 		target, err := url.Parse(cert.Target)
 		if err != nil {
+			logx.Errorw("ReverseProxyHandler url.Parse(cert.Target)", logx.Field("cert.Target", cert.Target))
 			http.Error(w, "Not Found", http.StatusNotFound)
 			return
 		}
@@ -24,6 +37,7 @@ func ReverseProxyHandler(w http.ResponseWriter, r *http.Request) {
 		proxy := httputil.NewSingleHostReverseProxy(target)
 		proxy.ServeHTTP(w, r)
 	} else {
+		logx.Errorw("ReverseProxyHandler certificate not found", logx.Field("r.Host", r.Host))
 		http.Error(w, "Not Found", http.StatusNotFound)
 	}
 }
@@ -32,6 +46,7 @@ func ReverseProxyHandler(w http.ResponseWriter, r *http.Request) {
 func ReverseProxyOrRedirect(w http.ResponseWriter, r *http.Request) {
 	cert, ok := cache.GlobalCache.Get(r.Host)
 	if !ok {
+		logx.Errorw("ReverseProxyOrRedirect certificate not found", logx.Field("r.Host", r.Host))
 		http.NotFound(w, r)
 		return
 	}
@@ -44,6 +59,7 @@ func ReverseProxyOrRedirect(w http.ResponseWriter, r *http.Request) {
 
 	target, err := url.Parse(cert.Target)
 	if err != nil {
+		logx.Errorw("ReverseProxyOrRedirect url.Parse(cert.Target)", logx.Field("cert.Target", cert.Target))
 		http.NotFound(w, r)
 		return
 	}
@@ -60,11 +76,11 @@ func AcceptChallenge(c *config.Config) http.HandlerFunc {
 
 		target, _ := url.Parse(c.Gateway.IssuerAddr)
 
-		logx.Infov(target.Hostname())
+		logx.Infow("AcceptChallenge Target hostname", logx.Field("target.Hostname", target.Hostname()))
 
 		targetUrl := fmt.Sprintf("http://%s:5001%s", target.Hostname(), r.RequestURI)
 
-		logx.Infof("Do challenge start: %s", targetUrl)
+		logx.Infow("AcceptChallenge Do challenge start", logx.Field("targetUrl", targetUrl))
 
 		r.Host = target.Host
 		r.URL = target

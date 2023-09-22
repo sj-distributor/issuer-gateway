@@ -3,6 +3,7 @@ package driver
 import (
 	"context"
 	"github.com/pygzfei/issuer-gateway/grpc/pb"
+	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc"
 	"io"
 	"log"
@@ -42,12 +43,12 @@ func (c *GrpcClient) GatewaySubscribe(ip string, onMegReceived OnMessageReceived
 				break
 			}
 			if err != nil {
-				log.Printf("Error receiving message: %v", err)
+				logx.Errorf("Error receiving message: %v", err)
 				if len(onErrReceiving) > 0 {
 					onErrReceiving[0](err)
 				}
 			}
-			log.Printf("Received message: %v\n", message.Certs)
+			logx.Infof("Received message: count for certs - %v", len(message.Certs))
 			onMegReceived(message.Certs)
 		}
 	}()

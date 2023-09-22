@@ -6,6 +6,7 @@ import (
 	"github.com/pygzfei/issuer-gateway/gateway/internal/config"
 	"github.com/pygzfei/issuer-gateway/gateway/internal/handler"
 	"github.com/pygzfei/issuer-gateway/gateway/internal/syncx"
+	"github.com/pygzfei/issuer-gateway/pkg/logger"
 	"github.com/pygzfei/issuer-gateway/utils"
 	"log"
 	"time"
@@ -14,6 +15,8 @@ import (
 func Run(confPath string) {
 
 	utils.MustLoad(&confPath, config.C)
+
+	logger.Init(config.C.Env)
 
 	cache.Init(config.C)
 

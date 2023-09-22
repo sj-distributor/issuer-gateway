@@ -8,7 +8,6 @@ import (
 	"github.com/zeromicro/x/errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	"log"
 	"sync"
 )
 
@@ -46,7 +45,7 @@ func (s *CertificatePubSubServer) SendCertificateToGateway(_ context.Context, re
 	err := stream.Send(s.cache.GetAll())
 
 	if err != nil {
-		log.Printf(fmt.Sprintf("Error sending message to Gateway(%s): %v", gatewayIp, err))
+		logx.Errorf("Error sending message to Gateway(%s): %v", gatewayIp, err)
 	}
 
 	return &pb.Empty{}, nil
@@ -69,7 +68,7 @@ func (s *CertificatePubSubServer) GatewaySubscribe(req *pb.SubscribeRequest, str
 		s.mu.Unlock()
 	}()
 
-	log.Printf("Subscription from %s ...\n", localIp)
+	logx.Debugf("Subscription from %s ...", localIp)
 
 	// 此处可以根据业务需求继续监听客户端的请求，例如接收消息或执行其他操作
 	for {
@@ -77,6 +76,7 @@ func (s *CertificatePubSubServer) GatewaySubscribe(req *pb.SubscribeRequest, str
 		select {
 		case <-stream.Context().Done():
 			// 订阅者断开连接时的处理
+			logx.Errorw("Subscriber disconnected", logx.Field("localIp", localIp))
 			return nil
 		}
 	}
@@ -95,18 +95,24 @@ func StreamInterceptor(srv interface{}, ss grpc.ServerStream, info *grpc.StreamS
 	}
 	token := val[0]
 
-	logx.Infof("bearer token is %s", token)
+	logx.Debugf("bearer token is %s", token)
+
+	// todo validate token
 
 	err := handler(srv, ss)
 	// grpc 客户端 断连提示
-	log.Printf("Stream Interceptor: After method %s is called", info.FullMethod)
+	logx.Errorf("Stream Interceptor: Executed error", err)
 	return err
 }
 
 // UnaryInterceptor 自定义一元拦截器
 func UnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-	log.Printf("Unary Interceptor: Before method %s is called", info.FullMethod)
+	logx.Debugf("Unary Interceptor: Before method %s is called", info.FullMethod)
+
+	// todo validate token
+
 	resp, err := handler(ctx, req)
-	log.Printf("Unary Interceptor: After method %s is called", info.FullMethod)
+
+	logx.Debugf("Unary Interceptor: After method %s is called", info.FullMethod)
 	return resp, err
 }

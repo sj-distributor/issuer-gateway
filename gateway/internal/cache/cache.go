@@ -2,10 +2,10 @@ package cache
 
 import (
 	"crypto/tls"
-	"fmt"
 	"github.com/dgraph-io/ristretto"
 	"github.com/pygzfei/issuer-gateway/gateway/internal/config"
 	"github.com/pygzfei/issuer-gateway/pkg/acme"
+	"github.com/zeromicro/go-zero/core/logx"
 	"log"
 )
 
@@ -61,6 +61,8 @@ func (c *MemoryCache) Delete(key string) {
 // SetRange setRange
 func (c *MemoryCache) SetRange(certs *[]Cert) error {
 
+	logx.Debugw("accept certs", logx.Field("certs number", len(*certs)))
+
 	for _, cert := range *certs {
 		if c.LastCertNumber < cert.Id {
 			c.LastCertNumber = cert.Id
@@ -75,7 +77,7 @@ func (c *MemoryCache) SetRange(certs *[]Cert) error {
 
 		pair, err := tls.X509KeyPair([]byte(certificateDecrypt), []byte(privateKeyDecrypt))
 		if err != nil {
-			log.Println(fmt.Sprintf("tls.X509KeyPair error: %s", err.Error()))
+			logx.Errorf("tls.X509KeyPair error: %s", err)
 			continue
 		}
 		cert.TlS = pair

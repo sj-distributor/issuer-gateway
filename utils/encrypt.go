@@ -5,8 +5,8 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"encoding/hex"
+	"errors"
 	"fmt"
-	"github.com/zeromicro/go-zero/core/logx"
 	"io"
 )
 
@@ -28,9 +28,10 @@ func Encrypt(plaintext, key string) (string, error) {
 	stream := cipher.NewCTR(block, iv)
 	stream.XORKeyStream(ciphertext[aes.BlockSize:], plaintextByte)
 
-	logx.Info(fmt.Printf("Original: %s\n", plaintext))
-	logx.Info(fmt.Printf("Encrypted: %x\n", ciphertext))
-
+	fmt.Printf("Original: %s", plaintext)
+	fmt.Println()
+	fmt.Printf("Encrypted: %x", ciphertext)
+	fmt.Println()
 	return hex.EncodeToString(ciphertext), nil
 
 }
@@ -50,7 +51,7 @@ func Decrypt(ciphertext, key string) (string, error) {
 	}
 
 	if len(cipherTextByte) < aes.BlockSize {
-		return "", fmt.Errorf("ciphertext too short")
+		return "", errors.New("ciphertext too short")
 	}
 
 	iv := cipherTextByte[:aes.BlockSize]
@@ -59,7 +60,9 @@ func Decrypt(ciphertext, key string) (string, error) {
 	stream := cipher.NewCTR(block, iv)
 	stream.XORKeyStream(cipherTextByte, cipherTextByte)
 
-	logx.Info(fmt.Printf("Decrypted: %s\n", cipherTextByte))
+	fmt.Println()
+	fmt.Printf("Decrypted: %s", cipherTextByte)
+	fmt.Println()
 
 	return string(cipherTextByte), nil
 }

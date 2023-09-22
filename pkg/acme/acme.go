@@ -4,12 +4,11 @@ import (
 	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
-	"fmt"
 	"github.com/go-acme/lego/v4/certificate"
 	"github.com/go-acme/lego/v4/challenge/http01"
 	"github.com/go-acme/lego/v4/lego"
 	"github.com/go-acme/lego/v4/registration"
-	"log"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 // AcmeAccount acme account
@@ -48,7 +47,7 @@ func ReqCertificate(env, accountEmail string, domains ...string) (*certificate.R
 	}
 
 	client, err := lego.NewClient(config)
-	log.Println("client-----", client, err)
+	logx.Info("client-----", client, err)
 
 	if err != nil {
 		return nil, err
@@ -56,7 +55,7 @@ func ReqCertificate(env, accountEmail string, domains ...string) (*certificate.R
 
 	// 设置http01验证
 	err = client.Challenge.SetHTTP01Provider(http01.NewProviderServer("", "5001"))
-	log.Println("SetHTTP01Provider-----", err)
+	logx.Info("SetHTTP01Provider-----", err)
 
 	if err != nil {
 		return nil, err
@@ -64,13 +63,14 @@ func ReqCertificate(env, accountEmail string, domains ...string) (*certificate.R
 
 	//  注册用户
 	reg, err := client.Registration.Register(registration.RegisterOptions{TermsOfServiceAgreed: true})
-	log.Println("Registration-----", reg, err)
+	logx.Info("Registration-----", reg, err)
 	if err != nil {
 		return nil, err
 	}
 	acmeAccount.Registration = reg
 
-	log.Println(fmt.Println("-- 开始申请证书 --"))
+	logx.Info("-- 开始申请证书 --")
+
 	// 创建证书
 	request := certificate.ObtainRequest{
 		Domains: domains,
@@ -81,9 +81,9 @@ func ReqCertificate(env, accountEmail string, domains ...string) (*certificate.R
 	if err != nil {
 		return nil, err
 	}
-	log.Println(fmt.Println("-- 开始申请结束 --"))
+	logx.Info("-- 开始申请结束 --")
 
-	log.Println(fmt.Printf("%#v\n", certificates))
+	logx.Infof("%#v", certificates)
 
 	return certificates, nil
 }

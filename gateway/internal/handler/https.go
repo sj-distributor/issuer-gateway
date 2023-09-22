@@ -8,7 +8,7 @@ import (
 func Https() *http.Server {
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", ReverseProxyHandler)
+	mux.HandleFunc("/", HttpMiddleware(ReverseProxyHandler))
 
 	server := &http.Server{
 		Addr:    ":443",

@@ -6,7 +6,7 @@ import (
 	"github.com/go-jose/go-jose/v3/json"
 	"github.com/pygzfei/issuer-gateway/grpc/pb"
 	"github.com/redis/go-redis/v9"
-	"log"
+	"github.com/zeromicro/go-zero/core/logx"
 	"sync"
 )
 
@@ -51,11 +51,11 @@ func (r *RedisClient) GatewaySubscribe(localIP string, received OnMessageReceive
 	go func() {
 		// 接收订阅的消息
 		for msg := range selfChannel {
-			log.Printf("selfChannel 收到消息: %s\n", msg.Payload)
+			logx.Infof("selfChannel 收到消息: %s", msg.Payload)
 			var certs []*pb.Cert
 			err := json.Unmarshal([]byte(msg.Payload), &certs)
 			if err != nil {
-				log.Printf("selfChannel 同步失败: %s\n", err)
+				logx.Infof("selfChannel 同步失败: %s", err)
 				if len(receiving) > 0 {
 					receiving[0](err)
 				}
@@ -68,11 +68,11 @@ func (r *RedisClient) GatewaySubscribe(localIP string, received OnMessageReceive
 	go func() {
 		// 接收订阅的消息
 		for msg := range globalChannel {
-			log.Printf("globalChannel 收到消息: %s\n", msg.Payload)
+			logx.Infof("globalChannel 收到消息: %s", msg.Payload)
 			var certs []*pb.Cert
 			err := json.Unmarshal([]byte(msg.Payload), &certs)
 			if err != nil {
-				log.Printf("globalChannel 同步失败: %s\n", err)
+				logx.Infof("globalChannel 同步失败: %s", err)
 				if len(receiving) > 0 {
 					receiving[0](err)
 				}

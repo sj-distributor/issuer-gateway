@@ -4,6 +4,7 @@ import (
 	"github.com/pygzfei/issuer-gateway/issuer/internal/config"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/errs"
 	"github.com/pygzfei/issuer-gateway/utils"
+	"github.com/zeromicro/go-zero/core/logx"
 	xhttp "github.com/zeromicro/x/http"
 	"net/http"
 	"strings"
@@ -20,7 +21,16 @@ func NewAuthorizationMiddleware(c *config.Config) *AuthorizationMiddleware {
 }
 
 func (m *AuthorizationMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
+
 	return func(w http.ResponseWriter, r *http.Request) {
+
+		logx.Infow(r.RemoteAddr,
+			logx.Field("Method", r.Method),
+			logx.Field("Host", r.Host),
+			logx.Field("URL", r.URL),
+			logx.Field("Header", r.Header),
+		)
+
 		c := m.Config
 		token := r.Header.Get("Authorization")
 		_, after, _ := strings.Cut(token, "Bearer ")
@@ -34,6 +44,7 @@ func (m *AuthorizationMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc
 				return
 			}
 		}
+
 		next(w, r)
 	}
 }

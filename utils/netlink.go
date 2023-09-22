@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"github.com/zeromicro/go-zero/core/logx"
 	"net"
 )
 
@@ -9,7 +10,7 @@ func GetLocalId() string {
 	// 获取本机的所有网络接口
 	interfaces, err := net.Interfaces()
 	if err != nil {
-		fmt.Println("无法获取网络接口:", err)
+		logx.Infof("无法获取网络接口:", err)
 		return ""
 	}
 
@@ -17,7 +18,7 @@ func GetLocalId() string {
 	for _, iface := range interfaces {
 		addrs, err := iface.Addrs()
 		if err != nil {
-			fmt.Printf("无法获取接口 %s 的IP地址：%v\n", iface.Name, err)
+			logx.Infof("无法获取接口 %s 的IP地址：%v", iface.Name, err)
 			continue
 		}
 
@@ -25,13 +26,13 @@ func GetLocalId() string {
 		for _, addr := range addrs {
 			ip, _, err := net.ParseCIDR(addr.String())
 			if err != nil {
-				fmt.Printf("无法解析IP地址：%v\n", err)
+				logx.Infof("无法解析IP地址：%v", err)
 				continue
 			}
 
 			// 排除IPv6地址和回环地址
 			if ip.To4() != nil && !ip.IsLoopback() && iface.Name == "en1" {
-				fmt.Printf("接口 %s 的IPv4地址：%s\n", iface.Name, ip)
+				logx.Infof("接口 %s 的IPv4地址：%s", iface.Name, ip)
 				return fmt.Sprintf("%s", ip)
 			}
 		}

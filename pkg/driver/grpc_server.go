@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/pygzfei/issuer-gateway/grpc/grpc_server"
 	"github.com/pygzfei/issuer-gateway/grpc/pb"
+	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -28,7 +29,7 @@ func NewGrpcServiceAndListen(addr string) {
 	// 注册发布者服务到 gRPC 服务器
 	pb.RegisterCertificateServiceServer(grpcServer, certificatePubSubServer)
 
-	fmt.Printf("Grpc Server is listening on : %s\n", addr)
+	logx.Infof("Grpc Server is listening on : %s", addr)
 	// 启动 gRPC 服务器
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
