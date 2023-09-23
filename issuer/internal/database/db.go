@@ -7,8 +7,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/pygzfei/gorm-dbup/pkg"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -43,14 +41,9 @@ func Init(c *config.Config) {
 			log.Fatalln(err)
 		}
 		db = database.Debug()
-	} else if c.Env == "release" {
-		err = database.Use(pkg.NewMigration(c.Issuer.Mysql.Migration.Db, c.Issuer.Mysql.Migration.Path))
-		if err != nil {
-			log.Fatalln(err)
-		}
 	}
 
-	s, err := database.DB()
+	s, err := db.DB()
 	if err != nil {
 		log.Fatalln(err)
 	}

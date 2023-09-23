@@ -2,17 +2,19 @@ package handler
 
 import (
 	"fmt"
-	"github.com/pygzfei/issuer-gateway/gateway/internal/cache"
-	"github.com/pygzfei/issuer-gateway/gateway/internal/config"
-	"github.com/zeromicro/go-zero/core/logx"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+
+	"github.com/pygzfei/issuer-gateway/gateway/internal/cache"
+	"github.com/pygzfei/issuer-gateway/gateway/internal/config"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 func HttpMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		logx.Infow(r.RemoteAddr,
+		logx.Sloww(r.RemoteAddr,
+			logx.Field("Scheme", r.URL.Scheme),
 			logx.Field("Method", r.Method),
 			logx.Field("Host", r.Host),
 			logx.Field("URL", r.URL),
@@ -45,26 +47,30 @@ func ReverseProxyHandler(w http.ResponseWriter, r *http.Request) {
 // ReverseProxyOrRedirect 启动http时, 判断是否强转https
 func ReverseProxyOrRedirect(w http.ResponseWriter, r *http.Request) {
 	cert, ok := cache.GlobalCache.Get(r.Host)
-	if !ok {
-		logx.Errorw("ReverseProxyOrRedirect certificate not found", logx.Field("r.Host", r.Host))
-		http.NotFound(w, r)
-		return
-	}
 
-	if cert.Certificate != "" {
-		httpsURL := "https://" + r.Host + r.URL.Path
-		http.Redirect(w, r, httpsURL, http.StatusMovedPermanently)
-		return
-	}
+	target := r.URL
 
-	target, err := url.Parse(cert.Target)
-	if err != nil {
-		logx.Errorw("ReverseProxyOrRedirect url.Parse(cert.Target)", logx.Field("cert.Target", cert.Target))
-		http.NotFound(w, r)
-		return
-	}
+	if ok {
+		if cert.Certificate != "" {
+			httpsURL := "https://" + r.Host + r.URL.Path
+			http.Redirect(w, r, httpsURL, http.StatusMovedPermanently)
+			return
+		}
 
-	r.Host = target.Host
+		target, err := url.Parse(cert.Target)
+		if err != nil {
+			logx.Errorw("ReverseProxyOrRedirect url.Parse(cert.Target)", logx.Field("cert.Target", cert.Target))
+			http.NotFound(w, r)
+			return
+		}
+		r.Host = target.Host
+		r.URL = target
+	}
+	//if !ok {
+	//	logx.Errorw("ReverseProxyOrRedirect certificate not found", logx.Field("r.Host", r.Host))
+	//	http.NotFound(w, r)
+	//	return
+	//}
 
 	proxy := httputil.NewSingleHostReverseProxy(target)
 	proxy.ServeHTTP(w, r)
@@ -74,16 +80,21 @@ func AcceptChallenge(c *config.Config) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		target, _ := url.Parse(c.Gateway.IssuerAddr)
+		targetUrl := fmt.Sprintf("%s%s", c.Gateway.IssuerAddr, r.RequestURI)
 
-		logx.Infow("AcceptChallenge Target hostname", logx.Field("target.Hostname", target.Hostname()))
-
-		targetUrl := fmt.Sprintf("http://%s:5001%s", target.Hostname(), r.RequestURI)
-
-		logx.Infow("AcceptChallenge Do challenge start", logx.Field("targetUrl", targetUrl))
+		target, err := url.Parse(targetUrl)
+		if err != nil {
+			logx.Errorw("AcceptChallenge err", logx.Field("error", err))
+			http.NotFound(w, r)
+			return
+		}
 
 		r.Host = target.Host
 		r.URL = target
+
+		fmt.Println()
+		fmt.Println("r.URL :", r.URL)
+		fmt.Println()
 
 		proxy := httputil.NewSingleHostReverseProxy(target)
 		proxy.ServeHTTP(w, r)

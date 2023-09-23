@@ -16,11 +16,7 @@ type Config struct {
 		}
 
 		Mysql struct {
-			Dns       string
-			Migration struct {
-				Path string
-				Db   string
-			}
+			Dns string
 		}
 	}
 
