@@ -43,12 +43,11 @@ func ReqCertificate(env, accountEmail string, domains ...string) (*certificate.R
 	config := lego.NewConfig(&acmeAccount)
 
 	config.CADirURL = lego.LEDirectoryProduction
-	//if env == "debug" {
-	//config.CADirURL = lego.LEDirectoryStaging
-	//}
+	if env == "debug" {
+		config.CADirURL = lego.LEDirectoryStaging
+	}
 
 	client, err := lego.NewClient(config)
-	fmt.Println("client-----", client, err)
 
 	if err != nil {
 		return nil, err
@@ -56,7 +55,6 @@ func ReqCertificate(env, accountEmail string, domains ...string) (*certificate.R
 
 	// 设置http01验证
 	err = client.Challenge.SetHTTP01Provider(http01.NewProviderServer("", "9394"))
-	fmt.Println("SetHTTP01Provider-----", err)
 
 	if err != nil {
 		return nil, err
@@ -64,7 +62,6 @@ func ReqCertificate(env, accountEmail string, domains ...string) (*certificate.R
 
 	//  注册用户
 	reg, err := client.Registration.Register(registration.RegisterOptions{TermsOfServiceAgreed: true})
-	fmt.Println("Registration-----", reg, err)
 	if err != nil {
 		return nil, err
 	}
@@ -82,9 +79,7 @@ func ReqCertificate(env, accountEmail string, domains ...string) (*certificate.R
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("-- 开始申请结束 --")
-
-	fmt.Println("%#v", certificates)
+	fmt.Println("-- 成功申请 --")
 
 	return certificates, nil
 }

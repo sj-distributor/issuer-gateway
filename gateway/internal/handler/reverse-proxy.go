@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -80,21 +79,13 @@ func AcceptChallenge(c *config.Config) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		targetUrl := fmt.Sprintf("%s%s", c.Gateway.IssuerAddr, r.RequestURI)
+		target, err := url.Parse(c.Gateway.IssuerAddr)
 
-		target, err := url.Parse(targetUrl)
 		if err != nil {
 			logx.Errorw("AcceptChallenge err", logx.Field("error", err))
 			http.NotFound(w, r)
 			return
 		}
-
-		r.Host = target.Host
-		r.URL = target
-
-		fmt.Println()
-		fmt.Println("r.URL :", r.URL)
-		fmt.Println()
 
 		proxy := httputil.NewSingleHostReverseProxy(target)
 		proxy.ServeHTTP(w, r)

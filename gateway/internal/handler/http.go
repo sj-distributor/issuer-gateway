@@ -11,6 +11,7 @@ import (
 
 func Http(c *config.Config) {
 	go func() {
+
 		mux := http.NewServeMux()
 
 		mux.HandleFunc("/", HttpMiddleware(ReverseProxyOrRedirect))
