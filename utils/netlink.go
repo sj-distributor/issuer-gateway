@@ -31,7 +31,7 @@ func GetLocalIP() string {
 			}
 
 			// 排除IPv6地址和回环地址
-			if ip.To4() != nil && !ip.IsLoopback() && iface.Name == "en1" {
+			if ip.To4() != nil && !ip.IsLoopback() && iface.Name == "eth0" {
 				logx.Infof("IPv4 address for (%s)：%s", iface.Name, ip)
 				return fmt.Sprintf("%s", ip)
 			}

@@ -2,6 +2,7 @@ package cache
 
 import (
 	"crypto/tls"
+	"fmt"
 	"github.com/dgraph-io/ristretto"
 	"github.com/pygzfei/issuer-gateway/gateway/internal/config"
 	"github.com/pygzfei/issuer-gateway/pkg/acme"
@@ -81,6 +82,8 @@ func (c *MemoryCache) SetRange(certs *[]Cert) error {
 			continue
 		}
 		cert.TlS = pair
+
+		fmt.Println("set cert domain :", cert.Domain)
 
 		c.Set(cert.Domain, cert)
 	}

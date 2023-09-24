@@ -27,7 +27,18 @@ func NewCertificatePubSubServer() *CertificatePubSubServer {
 
 // SyncCertificateToProvider 发送证书给provider
 func (s *CertificatePubSubServer) SyncCertificateToProvider(_ context.Context, certs *pb.CertificateList) (*pb.Empty, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	s.cache.SetRange(certs)
+
+	for gatewayIp, stream := range s.gateways {
+		err := stream.Send(certs)
+
+		if err != nil {
+			logx.Errorf("Error sending message to GatewayIP(%s): %v", gatewayIp, err)
+		}
+	}
+
 	return &pb.Empty{}, nil
 }
 

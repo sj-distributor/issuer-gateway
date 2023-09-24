@@ -8,6 +8,10 @@ import (
 )
 
 func CertificateInject(info *tls.ClientHelloInfo) (*tls.Certificate, error) {
+	fmt.Println()
+	fmt.Println(info.ServerName)
+	fmt.Println(info.SupportedProtos)
+	fmt.Println()
 	if cert, b := cache.GlobalCache.Get(info.ServerName); b {
 		return &cert.TlS, nil
 	}

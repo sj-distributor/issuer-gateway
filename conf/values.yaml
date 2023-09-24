@@ -24,6 +24,7 @@ Issuer:
   Name: issuer-api
   Host: 0.0.0.0
   Port: 9090
+  Timeout: 20000
 
   DevServer:
     Enabled: true
@@ -33,13 +34,10 @@ Issuer:
     Pass: "000000"
 
   Mysql:
-    Dns: root:123456@tcp(192.167.167.167:3306)/cert-gateway?charset=utf8mb4&parseTime=true
-    Migration:
-      Path: "internal/database/migration"
-      Db: "cert-gateway"
+    Dns: root:123456@tcp(127.0.0.1:3306)/issuer-gateway?charset=utf8mb4&parseTime=true
 
 
 
 
 Gateway:
-  IssuerAddr: k8s cert service
+  IssuerAddr: 127.0.0.1:9090

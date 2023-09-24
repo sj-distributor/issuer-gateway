@@ -37,7 +37,9 @@ func (l *AddCertLogic) AddCert(req *types.CertificateRequest) (resp *types.AddOr
 	}
 
 	certInfo, err := acme.ReqCertificate(l.svcCtx.Config.Env, cert.Email, cert.Domain)
-
+	if err != nil {
+		return nil, err
+	}
 	certificateEncrypt, privateKeyEncrypt, issuerCertificateEncrypt, expire, err := acme.EncryptCertificate(certInfo, l.svcCtx.Config.Secret)
 	if err != nil {
 		return nil, err

@@ -2,7 +2,6 @@ package acme
 
 import (
 	"fmt"
-	"github.com/zeromicro/go-zero/core/logx"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -15,8 +14,12 @@ func AcceptChallenge() http.HandlerFunc {
 		targetUrl := fmt.Sprintf("http://%s:5001%s", r.Host, r.RequestURI)
 		target, _ := url.Parse(targetUrl)
 
-		logx.Infof("Do challenge start: %s", targetUrl)
-		
+		fmt.Println()
+		fmt.Println()
+		fmt.Println("Do challenge start: ", targetUrl)
+		fmt.Println()
+		fmt.Println()
+
 		r.Host = target.Host
 		r.URL = target
 
