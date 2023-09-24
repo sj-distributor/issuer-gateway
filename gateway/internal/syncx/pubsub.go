@@ -19,7 +19,7 @@ var GlobalPubSub driver.IProvider
 func Init(c *config.Config) {
 	podId := os.Getenv("podId")
 	if podId == "" {
-		id := utils.GetLocalId()
+		id := utils.GetLocalIP()
 		podId = id
 	}
 	switch c.Sync.Target {

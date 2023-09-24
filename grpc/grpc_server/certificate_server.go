@@ -101,7 +101,7 @@ func StreamInterceptor(srv interface{}, ss grpc.ServerStream, info *grpc.StreamS
 
 	err := handler(srv, ss)
 	// grpc 客户端 断连提示
-	logx.Errorf("Stream Interceptor: Executed error", err)
+	logx.Error("Stream Interceptor: Executed error", err)
 	return err
 }
 

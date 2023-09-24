@@ -6,18 +6,17 @@ require (
 	github.com/dgraph-io/ristretto v0.1.1
 	github.com/go-acme/lego/v4 v4.14.2
 	github.com/go-jose/go-jose/v3 v3.0.0
+	github.com/go-playground/assert/v2 v2.2.0
 	github.com/go-playground/validator/v10 v10.15.4
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/pygzfei/gorm-dbup v1.1.2
 	github.com/redis/go-redis/v9 v9.2.0
-	github.com/rs/zerolog v1.30.0
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.16.0
 	github.com/stretchr/testify v1.8.4
 	github.com/yitter/idgenerator-go v1.3.3
 	github.com/zeromicro/go-zero v1.5.5
 	github.com/zeromicro/x v0.0.0-20230424055333-01c7fb9548d4
-	github.com/zeromicro/zero-contrib/logx/zerologx v0.0.0-20230807142214-5952d42ba776
 	google.golang.org/grpc v1.58.2
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/tylerb/graceful.v1 v1.2.15
