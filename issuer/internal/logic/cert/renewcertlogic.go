@@ -32,13 +32,11 @@ func (l *RenewCertLogic) RenewCert(req *types.CertificateRequest) (resp *types.A
 	cert := &entity.Cert{Id: req.Id}
 
 	err = l.svcCtx.DB.Transaction(func(tx *gorm.DB) error {
-		// 1. 查
 		db := tx.First(cert)
 		if db.Error != nil || db.RowsAffected == 0 {
 			return errs.NotFoundException
 		}
 
-		// 2. renew
 		certInfo, err := acme.ReqCertificate(l.svcCtx.Config.Env, cert.Email, cert.Domain)
 		if err != nil {
 			return err
@@ -59,13 +57,11 @@ func (l *RenewCertLogic) RenewCert(req *types.CertificateRequest) (resp *types.A
 			Expire:            expire,
 		}
 
-		// 3. 删
 		db = tx.Delete(cert)
 		if db.Error != nil || db.RowsAffected == 0 {
 			return errs.NotFoundException
 		}
 
-		// 4. 新增 cert
 		created := tx.Create(newCert)
 		if created.Error != nil || created.RowsAffected == 0 {
 			return errs.DatabaseError
