@@ -10,7 +10,7 @@ type Config struct {
 
 	Gateway struct {
 		rest.RestConf
-		IssuerAddr string
+		IssuerService string
 	}
 
 	Sync struct {

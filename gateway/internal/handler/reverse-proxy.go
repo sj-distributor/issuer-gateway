@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -78,8 +79,7 @@ func ReverseProxyOrRedirect(w http.ResponseWriter, r *http.Request) {
 func AcceptChallenge(c *config.Config) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-
-		target, err := url.Parse(c.Gateway.IssuerAddr)
+		target, err := url.Parse(fmt.Sprintf("%s:10086", c.Gateway.IssuerService))
 
 		if err != nil {
 			logx.Errorw("AcceptChallenge err", logx.Field("error", err))

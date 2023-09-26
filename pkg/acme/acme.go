@@ -29,7 +29,7 @@ func (u *AcmeAccount) GetPrivateKey() crypto.PrivateKey {
 	return u.key
 }
 
-func ReqCertificate(env, accountEmail string, domains ...string) (*certificate.Resource, error) {
+func ReqCertificate(CADirURL, accountEmail string, domains ...string) (*certificate.Resource, error) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return nil, err
@@ -41,11 +41,7 @@ func ReqCertificate(env, accountEmail string, domains ...string) (*certificate.R
 	}
 
 	config := lego.NewConfig(&acmeAccount)
-
-	config.CADirURL = lego.LEDirectoryProduction
-	if env == "debug" {
-		config.CADirURL = lego.LEDirectoryStaging
-	}
+	config.CADirURL = CADirURL
 
 	client, err := lego.NewClient(config)
 
@@ -54,7 +50,7 @@ func ReqCertificate(env, accountEmail string, domains ...string) (*certificate.R
 	}
 
 	// 设置http01验证
-	err = client.Challenge.SetHTTP01Provider(http01.NewProviderServer("", "9394"))
+	err = client.Challenge.SetHTTP01Provider(http01.NewProviderServer("", "10086"))
 
 	if err != nil {
 		return nil, err

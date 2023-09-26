@@ -26,8 +26,8 @@ Issuer:
   Port: 9090
   Timeout: 20000
 
-  DevServer:
-    Enabled: true
+  CADirURL: "https://acme-staging-v02.api.letsencrypt.org/directory" # letsencrypt staging
+#  CADirURL: "https://acme-v02.api.letsencrypt.org/directory" # letsencrypt prd
 
   User:
     Name: anson@test.com
@@ -37,7 +37,7 @@ Issuer:
     Dns: root:123456@tcp(127.0.0.1:3306)/issuer-gateway?charset=utf8mb4&parseTime=true
 
 
-
-
 Gateway:
-  IssuerAddr: 127.0.0.1:9090
+  # 证书申请服务
+  IssuerService: http://127.0.0.1
+

@@ -10,6 +10,8 @@ type Config struct {
 	Issuer struct {
 		rest.RestConf
 
+		CADirURL string
+
 		User struct {
 			Name string
 			Pass string
