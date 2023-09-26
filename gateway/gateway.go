@@ -16,7 +16,7 @@ func Run(confPath string) {
 
 	utils.MustLoad(&confPath, config.C)
 
-	logger.Init(config.C.Env)
+	logger.Init(config.C.Logger.Level, "Gateway")
 
 	cache.Init(config.C)
 

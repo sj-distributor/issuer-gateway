@@ -9,6 +9,6 @@ test:
 	go test -v ./...
 
 build:
-	docker build -f ./issuer/Dockerfile -t cert:v1.0.0 . &&  docker build -f ./gateway/Dockerfile -t gateway:v1.0.0 .
+	go build -ldflags="-s -w" -o ./ig ./cmd/main.go
 proto:
 	cd bus && rm -rf ./pb/* && protoc --go_out=. --go-grpc_out=. pubsub.proto && cd ..

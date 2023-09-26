@@ -36,7 +36,7 @@ func (l *AddCertLogic) AddCert(req *types.CertificateRequest) (resp *types.AddOr
 		return nil, db.Error
 	}
 
-	certInfo, err := acme.ReqCertificate(l.svcCtx.Config.Env, cert.Email, cert.Domain)
+	certInfo, err := acme.ReqCertificate(l.svcCtx.Config.Issuer.CADirURL, cert.Email, cert.Domain)
 	if err != nil {
 		return nil, err
 	}

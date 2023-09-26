@@ -8,7 +8,7 @@ import "types/user.api"
 	prefix: /api/user
 	group: user
 )
-service cert-api {
+service issuer-api {
 	@doc "用户登录"
 	@handler UserLogin
 	post /login (UserLoginReq) returns (UserLoginResp)
@@ -20,7 +20,7 @@ service cert-api {
 	group: cert
 	middleware: Authorization
 )
-service cert-api {
+service issuer-api {
 	@doc "绑定域名"
 	@handler AddDomain
 	post /domain (AddDomainReq) returns (AddOrRenewCertificateResp)

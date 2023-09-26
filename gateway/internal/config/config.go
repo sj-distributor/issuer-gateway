@@ -5,12 +5,15 @@ import "github.com/zeromicro/go-zero/rest"
 var C = &Config{}
 
 type Config struct {
-	Env    string
 	Secret string
+
+	Logger struct {
+		Level string
+	}
 
 	Gateway struct {
 		rest.RestConf
-		IssuerAddr string
+		IssuerService string
 	}
 
 	Sync struct {

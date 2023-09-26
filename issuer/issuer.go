@@ -7,7 +7,6 @@ import (
 	"github.com/pygzfei/issuer-gateway/issuer/internal/handler"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/svc"
 	"github.com/pygzfei/issuer-gateway/issuer/middleware"
-	"github.com/pygzfei/issuer-gateway/pkg/acme"
 	"github.com/pygzfei/issuer-gateway/pkg/logger"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -21,7 +20,7 @@ func Run(conPath string) {
 	var c config.Config
 	conf.MustLoad(conPath, &c)
 
-	logger.Init(c.Env)
+	logger.Init(c.Logger.Level, "Issuer")
 	database.Init(&c)
 
 	server := rest.MustNewServer(c.Issuer.RestConf,
@@ -32,12 +31,6 @@ func Run(conPath string) {
 	)
 
 	defer server.Stop()
-
-	server.AddRoute(rest.Route{
-		Method:  http.MethodGet,
-		Path:    "/.well-known/acme-challenge/:token",
-		Handler: acme.AcceptChallenge(),
-	})
 
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)

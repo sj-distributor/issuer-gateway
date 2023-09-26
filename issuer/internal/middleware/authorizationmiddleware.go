@@ -24,7 +24,8 @@ func (m *AuthorizationMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		logx.Infow(r.RemoteAddr,
+		logx.Info(
+			logx.Field("RemoteAddr", r.RemoteAddr),
 			logx.Field("Method", r.Method),
 			logx.Field("Host", r.Host),
 			logx.Field("URL", r.URL),

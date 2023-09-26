@@ -9,7 +9,6 @@ import (
 	"github.com/pygzfei/issuer-gateway/pkg/driver"
 	"google.golang.org/grpc/metadata"
 	"log"
-	"time"
 )
 
 func Init(c *config.Config) driver.IProvider {
@@ -40,7 +39,7 @@ func setUpCertificate(provider driver.IProvider) {
 
 	var entityCerts []entity.Cert
 
-	err := database.DB().Where("certificate != ''").Where("expire > ?", time.Now()).Find(&entityCerts).Order("id").Error
+	err := database.DB().Where("certificate != ''").Where("expire != ?", "0000-00-00 00:00:00").Find(&entityCerts).Order("id").Error
 
 	if err != nil {
 		log.Panicf("set up certificate error: %s", err)

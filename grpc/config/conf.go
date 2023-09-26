@@ -1,8 +1,10 @@
 package conf
 
 type Config struct {
-	Env    string
 	Secret string
+	Logger struct {
+		Level string
+	}
 
 	Sync struct {
 		Target     string
