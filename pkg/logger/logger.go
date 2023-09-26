@@ -5,11 +5,12 @@ import (
 	"os"
 )
 
-func Init(env string) {
+func Init(level string, serviceName string) {
 
 	logx.MustSetup(logx.LogConf{
-		Level: env,       // [debug,info,error,severe]
-		Mode:  "console", // [console,file,volume]
+		Level:       level,
+		ServiceName: serviceName,
+		Mode:        "console", // [console,file,volume]
 	})
 
 	logx.SetWriter(logx.NewWriter(os.Stdout))

@@ -20,7 +20,7 @@ func Run(conPath string) {
 	var c config.Config
 	conf.MustLoad(conPath, &c)
 
-	logger.Init(c.Env)
+	logger.Init(c.Logger.Level, "Issuer")
 	database.Init(&c)
 
 	server := rest.MustNewServer(c.Issuer.RestConf,

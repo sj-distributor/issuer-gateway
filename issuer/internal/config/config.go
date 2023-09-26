@@ -4,8 +4,11 @@ import "github.com/zeromicro/go-zero/rest"
 
 type Config struct {
 	Secret    string
-	Env       string
 	JWTSecret string
+
+	Logger struct {
+		Level string
+	}
 
 	Issuer struct {
 		rest.RestConf
@@ -19,6 +22,7 @@ type Config struct {
 
 		Mysql struct {
 			Dns string
+			Env string
 		}
 	}
 

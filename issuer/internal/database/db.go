@@ -35,7 +35,7 @@ func Init(c *config.Config) {
 
 	db = database
 
-	if c.Env == "dev" || c.Env == "debug" {
+	if c.Issuer.Mysql.Env == "dev" {
 		err = database.AutoMigrate(&entity.Cert{})
 		if err != nil {
 			log.Fatalln(err)

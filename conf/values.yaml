@@ -1,6 +1,8 @@
-Env: debug
 Secret: 66d2e42661bc292f8237b4736a423a36
 JWTSecret: F2NFhljyALXM86x
+
+Logger:
+  Level: debug # [debug,info,error,severe]
 
 Sync:
   #  GRPC
@@ -35,6 +37,7 @@ Issuer:
 
   Mysql:
     Dns: root:123456@tcp(127.0.0.1:3306)/issuer-gateway?charset=utf8mb4&parseTime=true
+    Env: dev
 
 
 Gateway:

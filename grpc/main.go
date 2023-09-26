@@ -12,7 +12,7 @@ func Run(confPath string) {
 	var c conf.Config
 	utils.MustLoad(&confPath, &c)
 	if strings.ToUpper(c.Sync.Target) == "GRPC" {
-		logger.Init(c.Env)
+		logger.Init(c.Logger.Level, "GrpcServer")
 		driver.NewGrpcServiceAndListen(c.Sync.GrpcServer.Port)
 	}
 }
