@@ -27,6 +27,5 @@ func Http(c *config.Config) {
 		if err != nil {
 			log.Fatalln(err)
 		}
-
 	}()
 }
