@@ -29,6 +29,7 @@ jobs:
       - name: Display GitVersion outputs
         run: |
           echo "SemVer: ${{ steps.gitversion.outputs.semVer }}"
+          echo "BranchName: ${{ steps.gitversion.outputs.branchName }}"
 
       - name: Set up Go
         uses: actions/setup-go@v4
@@ -57,8 +58,9 @@ jobs:
           username: ${{secrets.DOCKER_USERNAME}}
           password: ${{secrets.DOCKER_PASSWORD}}
 
-      - name: Build and Push Docker Image
-        run: |
-          docker build -f ./Dockerfile -t gofee/issuer-gateway:v${{ steps.gitversion.outputs.semVer }} .
-          
-          docker push gofee/issuer-gateway:v${{ steps.gitversion.outputs.semVer }}
+      - name: Build Docker Image
+        run:  docker build -f ./Dockerfile -t gofee/issuer-gateway:v${{ steps.gitversion.outputs.semVer }} .
+
+      - name: Push Docker Image (only on main branch)
+        if: ${{ steps.gitversion.outputs.branchName == 'main' }}
+        run: docker push gofee/issuer-gateway:v${{ steps.gitversion.outputs.semVer }}
