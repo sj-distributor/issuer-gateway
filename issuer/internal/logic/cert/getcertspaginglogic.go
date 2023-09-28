@@ -61,7 +61,7 @@ func (l *GetCertsPagingLogic) GetCertsPaging(req *types.GetCertsPagingReq) (resp
 			Domain:    cert.Domain,
 			Target:    cert.Target,
 			Email:     cert.Email,
-			Expire:    cert.Expire.Unix(),
+			Expire:    cert.Expire,
 			CreatedAt: cert.CreatedAt.Unix(),
 		})
 	}
