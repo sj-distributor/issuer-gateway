@@ -1,7 +1,5 @@
 package config
 
-import "github.com/zeromicro/go-zero/rest"
-
 var C = &Config{}
 
 type Config struct {
@@ -12,7 +10,6 @@ type Config struct {
 	}
 
 	Gateway struct {
-		rest.RestConf
 		IssuerService string
 	}
 

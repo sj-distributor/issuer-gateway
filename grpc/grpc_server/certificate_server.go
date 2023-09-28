@@ -25,6 +25,10 @@ func NewCertificatePubSubServer() *CertificatePubSubServer {
 	}
 }
 
+func (s *CertificatePubSubServer) Check(context.Context, *pb.Empty) (*pb.Empty, error) {
+	return &pb.Empty{}, nil
+}
+
 // SyncCertificateToProvider 发送证书给provider
 func (s *CertificatePubSubServer) SyncCertificateToProvider(_ context.Context, certs *pb.CertificateList) (*pb.Empty, error) {
 	s.mu.Lock()

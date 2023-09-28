@@ -28,6 +28,7 @@ type CertificateServiceClient interface {
 	SyncCertificateToProvider(ctx context.Context, in *CertificateList, opts ...grpc.CallOption) (*Empty, error)
 	// Gateway订阅
 	GatewaySubscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (CertificateService_GatewaySubscribeClient, error)
+	Check(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type certificateServiceClient struct {
@@ -88,6 +89,15 @@ func (x *certificateServiceGatewaySubscribeClient) Recv() (*CertificateList, err
 	return m, nil
 }
 
+func (c *certificateServiceClient) Check(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/pb.CertificateService/Check", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CertificateServiceServer is the server API for CertificateService service.
 // All implementations must embed UnimplementedCertificateServiceServer
 // for forward compatibility
@@ -98,6 +108,7 @@ type CertificateServiceServer interface {
 	SyncCertificateToProvider(context.Context, *CertificateList) (*Empty, error)
 	// Gateway订阅
 	GatewaySubscribe(*SubscribeRequest, CertificateService_GatewaySubscribeServer) error
+	Check(context.Context, *Empty) (*Empty, error)
 	mustEmbedUnimplementedCertificateServiceServer()
 }
 
@@ -113,6 +124,9 @@ func (UnimplementedCertificateServiceServer) SyncCertificateToProvider(context.C
 }
 func (UnimplementedCertificateServiceServer) GatewaySubscribe(*SubscribeRequest, CertificateService_GatewaySubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method GatewaySubscribe not implemented")
+}
+func (UnimplementedCertificateServiceServer) Check(context.Context, *Empty) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Check not implemented")
 }
 func (UnimplementedCertificateServiceServer) mustEmbedUnimplementedCertificateServiceServer() {}
 
@@ -184,6 +198,24 @@ func (x *certificateServiceGatewaySubscribeServer) Send(m *CertificateList) erro
 	return x.ServerStream.SendMsg(m)
 }
 
+func _CertificateService_Check_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CertificateServiceServer).Check(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.CertificateService/Check",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CertificateServiceServer).Check(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CertificateService_ServiceDesc is the grpc.ServiceDesc for CertificateService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -198,6 +230,10 @@ var CertificateService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SyncCertificateToProvider",
 			Handler:    _CertificateService_SyncCertificateToProvider_Handler,
+		},
+		{
+			MethodName: "Check",
+			Handler:    _CertificateService_Check_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

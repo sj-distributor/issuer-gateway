@@ -11,4 +11,4 @@ test:
 build:
 	go build -ldflags="-s -w" -o ./ig ./cmd/main.go
 proto:
-	cd bus && rm -rf ./pb/* && protoc --go_out=. --go-grpc_out=. pubsub.proto && cd ..
+	cd grpc && rm -rf ./pb/* && protoc --go_out=. --go-grpc_out=. pubsub.proto && cd ..

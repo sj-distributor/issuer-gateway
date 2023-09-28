@@ -27,6 +27,9 @@ Issuer:
   Host: 0.0.0.0
   Port: 9090
   Timeout: 20000
+  DevServer:
+    Enabled: true
+    Port: 6060
 
   CADirURL: "https://acme-staging-v02.api.letsencrypt.org/directory" # letsencrypt staging
 #  CADirURL: "https://acme-v02.api.letsencrypt.org/directory" # letsencrypt prd
