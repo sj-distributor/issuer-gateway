@@ -16,7 +16,8 @@ COPY ./conf /app/conf
 RUN go build -ldflags="-s -w" -o /app/ig ./cmd/main.go
 
 
-FROM scratch
+FROM alpine:latest
+RUN apk update --no-cache && apk add --no-cache ca-certificates
 
 WORKDIR /app
 COPY --from=builder /app/conf /app/conf
