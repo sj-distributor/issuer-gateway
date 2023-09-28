@@ -60,11 +60,11 @@ jobs:
 
       - name: Build Docker Image
         run:  |
-          docker build -f ./Dockerfile -t gofee/issuer-gateway:v${{ steps.gitversion.outputs.semVer }} .
+          docker build -f ./Dockerfile -t gofee/issuer-gateway:${{ steps.gitversion.outputs.semVer }} .
           docker build -f ./Dockerfile -t gofee/issuer-gateway:latest .
 
       - name: Push Docker Image (only on main branch)
         if: ${{ steps.gitversion.outputs.branchName == 'main' }}
         run: |
-          docker push gofee/issuer-gateway:v${{ steps.gitversion.outputs.semVer }}
+          docker push gofee/issuer-gateway:${{ steps.gitversion.outputs.semVer }}
           docker push gofee/issuer-gateway:latest
