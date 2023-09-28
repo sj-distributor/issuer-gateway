@@ -22,10 +22,10 @@ func TestCertificate(t *testing.T) {
 			}
 
 			now := time.Now()
-			if now.Unix() > expire.Unix() {
-				assert.False(t, now.Before(expire))
+			if now.Unix() > expire {
+				assert.False(t, now.Unix() > expire)
 			} else {
-				assert.True(t, now.Before(expire))
+				assert.True(t, now.Unix() < expire)
 			}
 		})
 	}
