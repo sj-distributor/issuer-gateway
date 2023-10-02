@@ -32,7 +32,7 @@ Issuer:
     Port: 6060
 
   CADirURL: "https://acme-staging-v02.api.letsencrypt.org/directory" # letsencrypt staging
-#  CADirURL: "https://acme-v02.api.letsencrypt.org/directory" # letsencrypt prd
+  #  CADirURL: "https://acme-v02.api.letsencrypt.org/directory" # letsencrypt prd
 
   User:
     Name: anson@test.com

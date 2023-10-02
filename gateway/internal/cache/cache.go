@@ -3,11 +3,10 @@ package cache
 import (
 	"crypto/tls"
 	"fmt"
-	"github.com/dgraph-io/ristretto"
 	"github.com/pygzfei/issuer-gateway/gateway/internal/config"
 	"github.com/pygzfei/issuer-gateway/pkg/acme"
 	"github.com/zeromicro/go-zero/core/logx"
-	"log"
+	"sync"
 )
 
 var GlobalCache *MemoryCache
@@ -17,24 +16,14 @@ func Init(config *config.Config) {
 }
 
 type MemoryCache struct {
-	DB             *ristretto.Cache
+	DB             sync.Map
 	LastCertNumber uint64
 	Config         *config.Config
 }
 
 func newMemoryCache(config *config.Config) *MemoryCache {
-	cache, err := ristretto.NewCache(&ristretto.Config{
-		NumCounters: 1e7,     // number of keys to track frequency of (10M).
-		MaxCost:     1 << 30, // maximum cost of cache (1GB).
-		BufferItems: 64,      // number of keys per Get buffer.
-	})
-
-	if err != nil {
-		log.Fatalln(err)
-	}
-
 	return &MemoryCache{
-		DB:             cache,
+		DB:             sync.Map{},
 		LastCertNumber: 0,
 		Config:         config,
 	}
@@ -42,7 +31,7 @@ func newMemoryCache(config *config.Config) *MemoryCache {
 
 // Get returns the value for the given key.
 func (c *MemoryCache) Get(domain string) (*Cert, bool) {
-	if val, b := c.DB.Get(domain); b {
+	if val, b := c.DB.Load(domain); b {
 		cert := val.(Cert)
 		return &cert, true
 	}
@@ -51,12 +40,13 @@ func (c *MemoryCache) Get(domain string) (*Cert, bool) {
 
 // Set sets the value for the given key.
 func (c *MemoryCache) Set(domain string, value Cert) bool {
-	return c.DB.Set(domain, value, 1)
+	c.DB.Store(domain, value)
+	return true
 }
 
 // Delete deletes the value for the given key.
 func (c *MemoryCache) Delete(key string) {
-	c.DB.Del(key)
+	c.DB.Delete(key)
 }
 
 // SetRange setRange
@@ -65,6 +55,10 @@ func (c *MemoryCache) SetRange(certs *[]Cert) error {
 	logx.Debugw("accept certs", logx.Field("certs number", len(*certs)))
 
 	for _, cert := range *certs {
+		if cert.PrivateKey == "" || cert.Certificate == "" && cert.Id != 0 {
+			c.Set(cert.Domain, cert)
+			continue
+		}
 		if c.LastCertNumber < cert.Id {
 			c.LastCertNumber = cert.Id
 		}
