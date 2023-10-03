@@ -57,20 +57,16 @@ func ReverseProxyOrRedirect(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		target, err := url.Parse(cert.Target)
+		parseURI, err := url.Parse(cert.Target)
 		if err != nil {
 			logx.Errorw("ReverseProxyOrRedirect url.Parse(cert.Target)", logx.Field("cert.Target", cert.Target))
 			http.NotFound(w, r)
 			return
 		}
+		target = parseURI
 		r.Host = target.Host
 		r.URL = target
 	}
-	//if !ok {
-	//	logx.Errorw("ReverseProxyOrRedirect certificate not found", logx.Field("r.Host", r.Host))
-	//	http.NotFound(w, r)
-	//	return
-	//}
 
 	proxy := httputil.NewSingleHostReverseProxy(target)
 	proxy.ServeHTTP(w, r)

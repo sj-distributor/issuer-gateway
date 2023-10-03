@@ -24,7 +24,7 @@ message Cert  {
 message Empty {}
 
 service CertificateService {
-
+  
   // 发送证书同步给某个 Gateway
   rpc SendCertificateToGateway (SubscribeRequest) returns (Empty);
 

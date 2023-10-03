@@ -39,7 +39,7 @@ func setUpCertificate(provider driver.IProvider) {
 
 	var entityCerts []entity.Cert
 
-	err := database.DB().Where("certificate != ''").Where("expire > 0").Find(&entityCerts).Order("id").Error
+	err := database.DB().Find(&entityCerts).Order("id").Error
 
 	if err != nil {
 		log.Panicf("set up certificate error: %s", err)

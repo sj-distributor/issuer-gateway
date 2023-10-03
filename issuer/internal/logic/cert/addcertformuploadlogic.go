@@ -3,6 +3,7 @@ package cert
 import (
 	"context"
 	"github.com/go-acme/lego/v4/certificate"
+	"github.com/pygzfei/issuer-gateway/grpc/pb"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/database/entity"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/svc"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/types"
@@ -54,6 +55,17 @@ func (l *AddCertFormUploadLogic) AddCertFormUpload(req *types.AddCertFormUploadR
 	if l.svcCtx.DB.Save(cert).Error != nil {
 		return nil, err
 	}
+
+	err = l.svcCtx.SyncProvider.SyncCertificateToProvider(&pb.CertificateList{Certs: []*pb.Cert{
+		{
+			Id:                cert.Id,
+			PrivateKey:        cert.PrivateKey,
+			Certificate:       cert.Certificate,
+			Domain:            cert.Domain,
+			Target:            cert.Target,
+			IssuerCertificate: cert.IssuerCertificate,
+		},
+	}})
 
 	return &types.AddOrRenewCertificateResp{}, nil
 }
