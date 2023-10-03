@@ -54,7 +54,7 @@ func TestRedisScheduler_StartAsync(t *testing.T) {
 				t.Errorf("StartAsync() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
-			time.Sleep(time.Duration(2) * time.Minute)
+			time.Sleep(time.Duration(1) * time.Minute)
 		})
 	}
 }

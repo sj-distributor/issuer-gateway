@@ -29,7 +29,7 @@ func TestCronSchedule_StartAsync(t *testing.T) {
 				s   *gocron.Scheduler
 				job *gocron.Job
 			}{s: gocron.NewScheduler(time.UTC), job: nil},
-			args: struct{ cron string }{cron: "*/1 * * * * *"},
+			args: struct{ cron string }{cron: "*/1 * * * *"},
 		},
 	}
 	for _, tt := range tests {
@@ -72,7 +72,7 @@ func TestCronSchedule_Stop(t *testing.T) {
 				s:   tt.fields.s,
 				job: tt.fields.job,
 			}
-			err := c.StartAsync("*/1 * * * * *", func() {
+			err := c.StartAsync("*/1 * * * *", func() {
 				fmt.Println("on Executing...")
 			})
 			if err != nil {
