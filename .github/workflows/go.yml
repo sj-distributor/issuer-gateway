@@ -31,6 +31,11 @@ jobs:
           echo "SemVer: ${{ steps.gitversion.outputs.semVer }}"
           echo "BranchName: ${{ steps.gitversion.outputs.branchName }}"
 
+      - name: Set up Redis
+        uses: supercharge/redis-github-action@1.4.0
+        with:
+          redis-version: 6
+
       - name: Set up Go
         uses: actions/setup-go@v4
         with:

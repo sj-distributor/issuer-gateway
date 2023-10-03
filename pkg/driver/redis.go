@@ -39,7 +39,7 @@ func NewRedisClient(addr []string, user, pass, masterName string, db int) *Redis
 		redis:                 rdb,
 		globalGatewayChannel:  "global-gateway-sync-channel",
 		selfChannel:           "self-gateway-sync-",
-		certificateStorageKey: "issuer-gateway-certs-key",
+		certificateStorageKey: "certificate-storage-key",
 	}
 }
 

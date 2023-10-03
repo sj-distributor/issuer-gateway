@@ -5,6 +5,7 @@ import (
 	"github.com/pygzfei/issuer-gateway/issuer/internal/database"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/errs"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/handler"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/scheduler"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/svc"
 	"github.com/pygzfei/issuer-gateway/issuer/middleware"
 	"github.com/pygzfei/issuer-gateway/pkg/logger"
@@ -34,6 +35,8 @@ func Run(conPath string) {
 
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
+
+	scheduler.NewScheduler(&c, ctx.SyncProvider)
 
 	logx.Infof("Starting server at %s:%d...", c.Issuer.Host, c.Issuer.Port)
 
