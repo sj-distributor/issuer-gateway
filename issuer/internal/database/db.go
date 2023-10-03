@@ -15,6 +15,7 @@ import (
 var db *gorm.DB
 
 func Init(c *config.Config) {
+
 	database, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:                       c.Issuer.Mysql.Dns, // DSN data source name
 		DefaultStringSize:         256,                // string 类型字段的默认长度
@@ -29,24 +30,29 @@ func Init(c *config.Config) {
 		DisableForeignKeyConstraintWhenMigrating: true, // 禁用数据库外键约束
 	})
 
-	// 插入时自动生成 雪花Id
+	if err != nil {
+		log.Fatalf("mysql init failed: [%s]", err)
+	}
+
+	// Automatically generate snowflake Id upon insertion
 	generateSnowflakeId := hooks.GenerateId()
 	err = database.Callback().Create().Before("gorm:create").Register(generateSnowflakeId.Name, generateSnowflakeId.Initialize)
+	if err != nil {
+		log.Fatalf("mysql init failed: [%s]", err)
+	}
+
+	err = database.AutoMigrate(&entity.Cert{})
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	db = database
-
-	if c.Issuer.Mysql.Env == "dev" {
-		err = database.AutoMigrate(&entity.Cert{})
-		if err != nil {
-			log.Fatalln(err)
-		}
-		db = database.Debug()
-	}
 
 	s, err := db.DB()
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 	// SetMaxIdleConns 设置空闲连接池中连接的最大数量
 	s.SetMaxIdleConns(10)
 	// SetMaxOpenConns 设置打开数据库连接的最大数量。

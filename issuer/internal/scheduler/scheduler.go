@@ -30,15 +30,17 @@ func NewScheduler(c *config.Config, syncProvider driver.IProvider) schedule.ISch
 	}
 
 	err := scheduler.StartAsync(c.Issuer.CheckExpireWithCron.Cron, func() {
+		db := database.DB()
+
 		var certs []entity.Cert
-		err := database.DB().Where("expire <= ?", time.Now().UTC().Unix()).Find(&certs).Order("id").Error
+		err := db.Where("expire <= ?", time.Now().UTC().Unix()).Find(&certs).Order("id").Error
 		if err != nil {
 			logx.Errorf("Failed to scan expired certificates: [%s]", err)
 			return
 		}
 
 		for _, certEntity := range certs {
-			err := cert.Renew(c, database.DB(), syncProvider, &certEntity)
+			err := cert.Renew(c, db, syncProvider, &certEntity)
 			if err != nil {
 				logx.Errorf("Failed to renew domain certificate: [%s], err: %s", certEntity.Domain, err)
 				continue
