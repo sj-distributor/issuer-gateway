@@ -15,6 +15,11 @@ type Config struct {
 
 		CADirURL string
 
+		CheckExpireWithCron struct {
+			Type string
+			Cron string
+		}
+
 		User struct {
 			Name string
 			Pass string

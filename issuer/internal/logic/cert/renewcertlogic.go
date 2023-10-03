@@ -3,11 +3,13 @@ package cert
 import (
 	"context"
 	"github.com/pygzfei/issuer-gateway/grpc/pb"
+	"github.com/pygzfei/issuer-gateway/issuer/internal/config"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/database/entity"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/errs"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/svc"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/types"
 	"github.com/pygzfei/issuer-gateway/pkg/acme"
+	"github.com/pygzfei/issuer-gateway/pkg/driver"
 	"gorm.io/gorm"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -28,21 +30,31 @@ func NewRenewCertLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RenewCe
 }
 
 func (l *RenewCertLogic) RenewCert(req *types.CertificateRequest) (resp *types.AddOrRenewCertificateResp, err error) {
-
 	cert := &entity.Cert{Id: req.Id}
 
-	err = l.svcCtx.DB.Transaction(func(tx *gorm.DB) error {
+	err = Renew(&l.svcCtx.Config, l.svcCtx.DB, l.svcCtx.SyncProvider, cert)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.AddOrRenewCertificateResp{}, err
+}
+
+func Renew(c *config.Config, db *gorm.DB, syncProvider driver.IProvider, cert *entity.Cert) error {
+
+	err := db.Transaction(func(tx *gorm.DB) error {
 		db := tx.First(cert)
 		if db.Error != nil || db.RowsAffected == 0 {
 			return errs.NotFoundException
 		}
 
-		certInfo, err := acme.ReqCertificate(l.svcCtx.Config.Issuer.CADirURL, cert.Email, cert.Domain)
+		certInfo, err := acme.ReqCertificate(c.Issuer.CADirURL, cert.Email, cert.Domain)
 		if err != nil {
 			return err
 		}
 
-		certificateEncrypt, privateKeyEncrypt, issuerCertificateEncrypt, expire, err := acme.EncryptCertificate(certInfo, l.svcCtx.Config.Secret)
+		certificateEncrypt, privateKeyEncrypt, issuerCertificateEncrypt, expire, err := acme.EncryptCertificate(certInfo, c.Secret)
 		if err != nil {
 			return err
 		}
@@ -67,7 +79,7 @@ func (l *RenewCertLogic) RenewCert(req *types.CertificateRequest) (resp *types.A
 			return errs.DatabaseError
 		}
 
-		err = l.svcCtx.SyncProvider.SyncCertificateToProvider(&pb.CertificateList{Certs: []*pb.Cert{
+		err = syncProvider.SyncCertificateToProvider(&pb.CertificateList{Certs: []*pb.Cert{
 			{
 				Id:                cert.Id,
 				PrivateKey:        cert.PrivateKey,
@@ -84,10 +96,5 @@ func (l *RenewCertLogic) RenewCert(req *types.CertificateRequest) (resp *types.A
 
 		return nil
 	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.AddOrRenewCertificateResp{}, err
+	return err
 }

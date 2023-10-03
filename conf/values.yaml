@@ -27,6 +27,13 @@ Issuer:
   Host: 0.0.0.0
   Port: 9090
   Timeout: 20000
+
+  CheckExpireWithCron:
+    # Redis
+    # Cron
+    Type: "Cron"
+    Cron: "*/1 * * * *"
+
   DevServer:
     Enabled: true
     Port: 6060
