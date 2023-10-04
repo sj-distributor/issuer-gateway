@@ -1,11 +1,39 @@
+[![codecov](https://codecov.io/github/pygzfei/issuer-gateway/graph/badge.svg?token=6HX1WDP37F)](https://codecov.io/github/pygzfei/issuer-gateway)
+[![Build Status](https://github.com/pygzfei/issuer-gateway/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/pygzfei/issuer-gateway/actions?query=branch%3Amain)
+[![Go Report Card](https://goreportcard.com/badge/github.com/pygzfei/issuer-gateway?branch=main)](https://goreportcard.com/report/github.com/pygzfei/issuer-gateway)
+![](https://img.shields.io/badge/license-MIT-green)
+
 ## Issuer Gateway
 
 A High Performance Gateway with Certificate Issuance and Flexible Proxy
 
-```
-docker run -p 9090:9090  -v $(pwd)/conf/values.yaml:/app/conf/values.yaml da78e64039dd  /app/ig issuer  -f ./conf/values.yaml
+**The key features of Issuer Gateway are:**
+- Issue certificate
+- Ensures certificates remain valid and up to date
+- Dynamic service pointing, no need to restart
+
+
+### Features
+- [ ] Limiter (concurrent control)
+- [ ] Load Balancing
+
+### Synchronizer driver
+- [x] GRPC
+- [x] Redis
+- [ ] Etcd
+- [ ] AMQP
+
+### Architecture diagram
 ```
 
 ```
-docker run -p 80:80 -p 443:443  -v $(pwd)/conf/values.yaml:/app/conf/values.yaml da78e64039dd  /app/ig gateway  -f ./conf/values.yaml
+
+### Use in K8S
+```
+
+```
+
+### Use in Standalone
+```
+
 ```
