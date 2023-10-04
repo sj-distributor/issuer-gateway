@@ -50,8 +50,11 @@ Issuer:
     Pass: "000000"
 
   Mysql:
-    Dns: root:123456@tcp(127.0.0.1:3306)/issuer-gateway?charset=utf8mb4&parseTime=true
-    Env: dev
+    User: root
+    Pass: "123456"
+    Host: 127.0.0.1
+    Port: "3306"
+    DB: issuer-gateway
 
 
 Gateway:

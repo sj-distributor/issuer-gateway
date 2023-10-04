@@ -30,8 +30,11 @@ type Config struct {
 		}
 
 		Mysql struct {
-			Dns string
-			Env string
+			User string
+			Pass string
+			Host string
+			Port string
+			DB   string
 		}
 	}
 

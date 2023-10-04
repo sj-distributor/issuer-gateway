@@ -1,6 +1,8 @@
 package database
 
 import (
+	"database/sql"
+	"fmt"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/config"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/database/entity"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/database/hooks"
@@ -15,14 +17,39 @@ import (
 var db *gorm.DB
 
 func Init(c *config.Config) {
+	dbConfig := c.Issuer.Mysql
+
+	dbConn, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/?charset=utf8mb4&parseTime=True",
+		dbConfig.User,
+		dbConfig.Pass,
+		dbConfig.Host,
+		dbConfig.Port,
+	))
+	if err != nil {
+		log.Fatalf("mysql init failed: [%s]", err)
+	}
+	_, err = dbConn.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s`", dbConfig.DB))
+	if err != nil {
+		log.Fatalf("mysql init failed: [%s]", err)
+	}
+
+	defer func(dbConn *sql.DB) {
+		_ = dbConn.Close()
+	}(dbConn)
 
 	database, err := gorm.Open(mysql.New(mysql.Config{
-		DSN:                       c.Issuer.Mysql.Dns, // DSN data source name
-		DefaultStringSize:         256,                // string 类型字段的默认长度
-		DisableDatetimePrecision:  true,               // 禁用 datetime 精度，MySQL 5.6 之前的数据库不支持
-		DontSupportRenameIndex:    true,               // 重命名索引时采用删除并新建的方式，MySQL 5.7 之前的数据库和 MariaDB 不支持重命名索引
-		DontSupportRenameColumn:   true,               // 用 `change` 重命名列，MySQL 8 之前的数据库和 MariaDB 不支持重命名列
-		SkipInitializeWithVersion: false,              // 根据当前 MySQL 版本自动配置
+		DSN: fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True",
+			dbConfig.User,
+			dbConfig.Pass,
+			dbConfig.Host,
+			dbConfig.Port,
+			dbConfig.DB,
+		), // DSN data source name
+		DefaultStringSize:         256,   // string 类型字段的默认长度
+		DisableDatetimePrecision:  true,  // 禁用 datetime 精度，MySQL 5.6 之前的数据库不支持
+		DontSupportRenameIndex:    true,  // 重命名索引时采用删除并新建的方式，MySQL 5.7 之前的数据库和 MariaDB 不支持重命名索引
+		DontSupportRenameColumn:   true,  // 用 `change` 重命名列，MySQL 8 之前的数据库和 MariaDB 不支持重命名列
+		SkipInitializeWithVersion: false, // 根据当前 MySQL 版本自动配置
 	}), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true, // 使用单数表名
