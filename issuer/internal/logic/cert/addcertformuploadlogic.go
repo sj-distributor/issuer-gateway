@@ -8,7 +8,6 @@ import (
 	"github.com/pygzfei/issuer-gateway/issuer/internal/svc"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/types"
 	"github.com/pygzfei/issuer-gateway/pkg/acme"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -38,7 +37,7 @@ func (l *AddCertFormUploadLogic) AddCertFormUpload(req *types.AddCertFormUploadR
 		Id: req.Id,
 	}
 
-	if l.svcCtx.DB.First(cert).Error != nil {
+	if l.svcCtx.DB.Where("id = ?", cert.Id).First(cert).Error != nil {
 		return nil, err
 	}
 

@@ -3,11 +3,14 @@ package grpc_server
 import (
 	"context"
 	"fmt"
+	conf "github.com/pygzfei/issuer-gateway/grpc/config"
 	"github.com/pygzfei/issuer-gateway/grpc/pb"
+	"github.com/pygzfei/issuer-gateway/pkg/errs"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/x/errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
+	"strings"
 	"sync"
 )
 
@@ -22,6 +25,7 @@ func NewCertificatePubSubServer() *CertificatePubSubServer {
 	return &CertificatePubSubServer{
 		cache:    MewMemoryCache(),
 		gateways: make(map[string]pb.CertificateService_GatewaySubscribeServer),
+		mu:       sync.Mutex{},
 	}
 }
 
@@ -92,42 +96,66 @@ func (s *CertificatePubSubServer) GatewaySubscribe(req *pb.SubscribeRequest, str
 		case <-stream.Context().Done():
 			// 订阅者断开连接时的处理
 			logx.Errorw("Subscriber disconnected", logx.Field("localIp", localIp))
-			return nil
+			break
 		}
 	}
 }
 
-// StreamInterceptor 自定义流拦截器
-func StreamInterceptor(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+// StreamInterceptor streamInterceptor
+func StreamInterceptor(conf *conf.Config) func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 
-	md, b := metadata.FromIncomingContext(ss.Context())
+	return func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+
+		token, err := getTokenFromCtx(ss.Context())
+		if err != nil {
+			return err
+		}
+		logx.Debugf("bearer token is %s", *token)
+
+		if *token != conf.Secret {
+			return errs.UnAuthorizationException
+		}
+
+		err = handler(srv, ss)
+		// grpc 客户端 断连提示
+		logx.Error("Stream Interceptor: Executed error", err)
+		return err
+	}
+}
+
+// UnaryInterceptor unaryInterceptor
+func UnaryInterceptor(conf *conf.Config) func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+		logx.Debugf("Unary Interceptor: Before method %s is called", info.FullMethod)
+
+		token, err := getTokenFromCtx(ctx)
+		if err != nil {
+			return nil, err
+		}
+		logx.Debugf("bearer token is %s", *token)
+
+		if *token != conf.Secret {
+			return nil, errs.UnAuthorizationException
+		}
+
+		resp, err := handler(ctx, req)
+
+		logx.Debugf("Unary Interceptor: After method %s is called", info.FullMethod)
+		return resp, err
+	}
+}
+
+func getTokenFromCtx(ctx context.Context) (token *string, err error) {
+	md, b := metadata.FromIncomingContext(ctx)
 	if !b {
 		logx.Errorf("Metadata not found in context.")
 	}
 	val := md.Get("authorization")
 	if len(val) == 0 {
-		return errors.New(401, "UnAuthorization")
+		return nil, errs.UnAuthorizationException
 	}
-	token := val[0]
 
-	logx.Debugf("bearer token is %s", token)
+	replace := strings.TrimPrefix(val[0], "Bearer ")
 
-	// todo validate token
-
-	err := handler(srv, ss)
-	// grpc 客户端 断连提示
-	logx.Error("Stream Interceptor: Executed error", err)
-	return err
-}
-
-// UnaryInterceptor 自定义一元拦截器
-func UnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-	logx.Debugf("Unary Interceptor: Before method %s is called", info.FullMethod)
-
-	// todo validate token
-
-	resp, err := handler(ctx, req)
-
-	logx.Debugf("Unary Interceptor: After method %s is called", info.FullMethod)
-	return resp, err
+	return &replace, nil
 }

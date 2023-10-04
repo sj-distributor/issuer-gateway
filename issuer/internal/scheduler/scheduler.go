@@ -5,6 +5,7 @@ import (
 	"github.com/pygzfei/issuer-gateway/issuer/internal/database"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/database/entity"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/logic/cert"
+	"github.com/pygzfei/issuer-gateway/pkg/acme"
 	"github.com/pygzfei/issuer-gateway/pkg/driver"
 	"github.com/pygzfei/issuer-gateway/pkg/schedule"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -13,7 +14,7 @@ import (
 	"time"
 )
 
-func NewScheduler(c *config.Config, syncProvider driver.IProvider) schedule.IScheduler {
+func NewScheduler(c *config.Config, syncProvider driver.IProvider, acmeProvider acme.IAcme) schedule.IScheduler {
 	var scheduler schedule.IScheduler
 
 	typeLower := strings.ToLower(c.Issuer.CheckExpireWithCron.Type)
@@ -40,7 +41,7 @@ func NewScheduler(c *config.Config, syncProvider driver.IProvider) schedule.ISch
 		}
 
 		for _, certEntity := range certs {
-			err := cert.Renew(c, db, syncProvider, &certEntity)
+			err := cert.Renew(c, db, syncProvider, acmeProvider, &certEntity)
 			if err != nil {
 				logx.Errorf("Failed to renew domain certificate: [%s], err: %s", certEntity.Domain, err)
 				continue

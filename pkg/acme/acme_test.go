@@ -9,6 +9,8 @@ import (
 
 func TestReqCertificate(t *testing.T) {
 
+	acmeProvider := &AcmeProvider{}
+
 	type args struct {
 		CADirURL     string
 		accountEmail string
@@ -32,7 +34,7 @@ func TestReqCertificate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := ReqCertificate(tt.args.CADirURL, tt.args.accountEmail, tt.args.domains...)
+			_, err := acmeProvider.ReqCertificate(tt.args.CADirURL, tt.args.accountEmail, tt.args.domains...)
 			if err != nil {
 				bytes, err := json.Marshal(err)
 				if err != nil {

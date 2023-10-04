@@ -4,10 +4,10 @@ import (
 	"context"
 	"github.com/pygzfei/issuer-gateway/grpc/pb"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/database/entity"
-	"github.com/pygzfei/issuer-gateway/issuer/internal/errs"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/svc"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/types"
 	"github.com/pygzfei/issuer-gateway/pkg/acme"
+	"github.com/pygzfei/issuer-gateway/pkg/errs"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -36,7 +36,7 @@ func (l *AddCertLogic) AddCert(req *types.CertificateRequest) (resp *types.AddOr
 		return nil, db.Error
 	}
 
-	certInfo, err := acme.ReqCertificate(l.svcCtx.Config.Issuer.CADirURL, cert.Email, cert.Domain)
+	certInfo, err := l.svcCtx.AcmeProvider.ReqCertificate(l.svcCtx.Config.Issuer.CADirURL, cert.Email, cert.Domain)
 	if err != nil {
 		return nil, err
 	}
