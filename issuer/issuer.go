@@ -21,7 +21,15 @@ func Run(conPath string) {
 	var c config.Config
 	conf.MustLoad(conPath, &c)
 
-	logger.Init(c.Logger.Level, "Issuer")
+	logger.Init(logx.LogConf{
+		Level:       c.Logger.Level,
+		Mode:        c.Logger.Mode,
+		Path:        c.Logger.Path,
+		KeepDays:    c.Logger.KeepDays,
+		MaxSize:     c.Logger.MaxSize,
+		ServiceName: "issuer",
+	})
+
 	database.Init(&c)
 
 	server := rest.MustNewServer(c.Issuer.RestConf,

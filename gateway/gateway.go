@@ -8,15 +8,23 @@ import (
 	"github.com/pygzfei/issuer-gateway/gateway/internal/syncx"
 	"github.com/pygzfei/issuer-gateway/pkg/logger"
 	"github.com/pygzfei/issuer-gateway/utils"
+	"github.com/zeromicro/go-zero/core/logx"
 	"log"
 	"time"
 )
 
 func Run(confPath string) {
+	var c = config.C
+	utils.MustLoad(&confPath, c)
 
-	utils.MustLoad(&confPath, config.C)
-
-	logger.Init(config.C.Logger.Level, "Gateway")
+	logger.Init(logx.LogConf{
+		Level:       c.Logger.Level,
+		Mode:        c.Logger.Mode,
+		Path:        c.Logger.Path,
+		KeepDays:    c.Logger.KeepDays,
+		MaxSize:     c.Logger.MaxSize,
+		ServiceName: "Gateway",
+	})
 
 	cache.Init(config.C)
 

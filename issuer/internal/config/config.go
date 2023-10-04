@@ -7,7 +7,11 @@ type Config struct {
 	JWTSecret string
 
 	Logger struct {
-		Level string
+		Level    string
+		Mode     string
+		Path     string
+		KeepDays int
+		MaxSize  int
 	}
 
 	Issuer struct {
