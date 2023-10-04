@@ -10,6 +10,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: "123456"
+          MYSQL_DATABASE: issuer-gateway
+        ports:
+          - 3306:3306
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
