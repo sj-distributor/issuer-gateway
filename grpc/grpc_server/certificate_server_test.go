@@ -151,15 +151,15 @@ func TestCertificatePubSubServer_GatewaySubscribe(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+
 		t.Run(tt.name, func(t *testing.T) {
+
 			s := &CertificatePubSubServer{
 				cache:                    tt.fields.cache,
 				mu:                       tt.fields.mu,
 				gateways:                 tt.fields.gateways,
 				CertificateServiceServer: tt.fields.CertificateServiceServer,
 			}
-			s.mu.Lock()
-			defer s.mu.Unlock()
 
 			go func() {
 				if err := s.GatewaySubscribe(tt.args.req, tt.args.stream); (err != nil) != tt.wantErr {
