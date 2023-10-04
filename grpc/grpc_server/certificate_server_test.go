@@ -158,6 +158,8 @@ func TestCertificatePubSubServer_GatewaySubscribe(t *testing.T) {
 				gateways:                 tt.fields.gateways,
 				CertificateServiceServer: tt.fields.CertificateServiceServer,
 			}
+			s.mu.Lock()
+			defer s.mu.Unlock()
 
 			go func() {
 				if err := s.GatewaySubscribe(tt.args.req, tt.args.stream); (err != nil) != tt.wantErr {
