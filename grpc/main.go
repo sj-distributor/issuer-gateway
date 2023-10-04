@@ -19,7 +19,7 @@ func Run(confPath string) {
 			Path:        c.Logger.Path,
 			KeepDays:    c.Logger.KeepDays,
 			MaxSize:     c.Logger.MaxSize,
-			ServiceName: "GrpcServer",
+			ServiceName: "Grpc",
 		})
 		driver.NewGrpcServiceAndListen(c.Sync.GrpcServer.Port)
 	}

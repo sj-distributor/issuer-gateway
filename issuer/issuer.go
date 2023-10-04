@@ -27,7 +27,7 @@ func Run(conPath string) {
 		Path:        c.Logger.Path,
 		KeepDays:    c.Logger.KeepDays,
 		MaxSize:     c.Logger.MaxSize,
-		ServiceName: "issuer",
+		ServiceName: "Issuer",
 	})
 
 	database.Init(&c)
