@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/pygzfei/issuer-gateway/issuer/internal/config"
-	"github.com/pygzfei/issuer-gateway/issuer/internal/errs"
+	"github.com/pygzfei/issuer-gateway/pkg/errs"
 	"github.com/pygzfei/issuer-gateway/utils"
 	"github.com/zeromicro/go-zero/core/logx"
 	xhttp "github.com/zeromicro/x/http"

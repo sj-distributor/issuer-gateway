@@ -1,7 +1,6 @@
 package acme
 
 import (
-	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
 	"fmt"
@@ -12,24 +11,14 @@ import (
 	"github.com/go-acme/lego/v4/registration"
 )
 
-// AcmeAccount acme account
-type AcmeAccount struct {
-	Email        string
-	Registration *registration.Resource
-	key          crypto.PrivateKey
+type IAcme interface {
+	ReqCertificate(CADirURL, accountEmail string, domains ...string) (*certificate.Resource, error)
 }
 
-func (u *AcmeAccount) GetEmail() string {
-	return u.Email
-}
-func (u AcmeAccount) GetRegistration() *registration.Resource {
-	return u.Registration
-}
-func (u *AcmeAccount) GetPrivateKey() crypto.PrivateKey {
-	return u.key
+type AcmeProvider struct {
 }
 
-func ReqCertificate(CADirURL, accountEmail string, domains ...string) (*certificate.Resource, error) {
+func (a *AcmeProvider) ReqCertificate(CADirURL, accountEmail string, domains ...string) (*certificate.Resource, error) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return nil, err

@@ -91,12 +91,3 @@ func Init(c *config.Config) {
 func DB() *gorm.DB {
 	return db
 }
-
-func Close() {
-	if sdb, e := db.DB(); e == nil {
-		err := sdb.Close()
-		if err != nil {
-			log.Println(err)
-		}
-	}
-}

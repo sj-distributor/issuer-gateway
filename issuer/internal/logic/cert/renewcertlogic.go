@@ -5,11 +5,11 @@ import (
 	"github.com/pygzfei/issuer-gateway/grpc/pb"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/config"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/database/entity"
-	"github.com/pygzfei/issuer-gateway/issuer/internal/errs"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/svc"
 	"github.com/pygzfei/issuer-gateway/issuer/internal/types"
 	"github.com/pygzfei/issuer-gateway/pkg/acme"
 	"github.com/pygzfei/issuer-gateway/pkg/driver"
+	"github.com/pygzfei/issuer-gateway/pkg/errs"
 	"gorm.io/gorm"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -32,7 +32,7 @@ func NewRenewCertLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RenewCe
 func (l *RenewCertLogic) RenewCert(req *types.CertificateRequest) (resp *types.AddOrRenewCertificateResp, err error) {
 	cert := &entity.Cert{Id: req.Id}
 
-	err = Renew(&l.svcCtx.Config, l.svcCtx.DB, l.svcCtx.SyncProvider, cert)
+	err = Renew(&l.svcCtx.Config, l.svcCtx.DB, l.svcCtx.SyncProvider, l.svcCtx.AcmeProvider, cert)
 
 	if err != nil {
 		return nil, err
@@ -41,7 +41,7 @@ func (l *RenewCertLogic) RenewCert(req *types.CertificateRequest) (resp *types.A
 	return &types.AddOrRenewCertificateResp{}, err
 }
 
-func Renew(c *config.Config, db *gorm.DB, syncProvider driver.IProvider, cert *entity.Cert) error {
+func Renew(c *config.Config, db *gorm.DB, syncProvider driver.IProvider, acmeProvider acme.IAcme, cert *entity.Cert) error {
 
 	err := db.Transaction(func(tx *gorm.DB) error {
 		db := tx.First(cert)
@@ -49,7 +49,7 @@ func Renew(c *config.Config, db *gorm.DB, syncProvider driver.IProvider, cert *e
 			return errs.NotFoundException
 		}
 
-		certInfo, err := acme.ReqCertificate(c.Issuer.CADirURL, cert.Email, cert.Domain)
+		certInfo, err := acmeProvider.ReqCertificate(c.Issuer.CADirURL, cert.Email, cert.Domain)
 		if err != nil {
 			return err
 		}

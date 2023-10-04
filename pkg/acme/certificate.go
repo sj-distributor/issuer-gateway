@@ -10,10 +10,6 @@ import (
 	"time"
 )
 
-type CertInfo struct {
-	CertificateEncrypt string
-}
-
 // GetCertificateExpireTime 获取证书过期时间
 func GetCertificateExpireTime(certPEM string) (expire int64, err error) {
 

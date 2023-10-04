@@ -21,6 +21,6 @@ func Run(confPath string) {
 			MaxSize:     c.Logger.MaxSize,
 			ServiceName: "Grpc",
 		})
-		driver.NewGrpcServiceAndListen(c.Sync.GrpcServer.Port)
+		driver.NewGrpcServiceAndListen(&c)
 	}
 }
