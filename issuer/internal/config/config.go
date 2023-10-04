@@ -7,7 +7,11 @@ type Config struct {
 	JWTSecret string
 
 	Logger struct {
-		Level string
+		Level    string
+		Mode     string
+		Path     string
+		KeepDays int
+		MaxSize  int
 	}
 
 	Issuer struct {
@@ -26,8 +30,11 @@ type Config struct {
 		}
 
 		Mysql struct {
-			Dns string
-			Env string
+			User string
+			Pass string
+			Host string
+			Port string
+			DB   string
 		}
 	}
 

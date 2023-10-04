@@ -3,7 +3,11 @@ package conf
 type Config struct {
 	Secret string
 	Logger struct {
-		Level string
+		Level    string
+		Mode     string
+		Path     string
+		KeepDays int
+		MaxSize  int
 	}
 
 	Sync struct {

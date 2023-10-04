@@ -2,7 +2,11 @@ Secret: 66d2e42661bc292f8237b4736a423a36
 JWTSecret: F2NFhljyALXM86x
 
 Logger:
-  Level: debug # [debug,info,error,severe]
+  Level: debug    # [debug,info,error,severe]
+  Mode: console   #  default=console,options=[console,file,volume]
+  Path: logs      # represents the log file path
+  KeepDays: 0     # default 0
+  MaxSize: 0      # default 0
 
 Sync:
   #  GRPC
@@ -46,8 +50,11 @@ Issuer:
     Pass: "000000"
 
   Mysql:
-    Dns: root:123456@tcp(127.0.0.1:3306)/issuer-gateway?charset=utf8mb4&parseTime=true
-    Env: dev
+    User: root
+    Pass: "123456"
+    Host: 127.0.0.1
+    Port: "3306"
+    DB: issuer-gateway
 
 
 Gateway:
