@@ -13,7 +13,7 @@ import (
 
 func HttpMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		logx.Sloww(r.RemoteAddr,
+		logx.Info(r.RemoteAddr,
 			logx.Field("Scheme", r.URL.Scheme),
 			logx.Field("Method", r.Method),
 			logx.Field("Host", r.Host),

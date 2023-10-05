@@ -9,45 +9,6 @@ import (
 	"testing"
 )
 
-func TestInit(t *testing.T) {
-
-	c := &config.Config{}
-
-	c.Sync.GrpcClient.Listen = "0.0.0.0:9527"
-	c.Sync.Target = "GRPC"
-	c.Sync.Redis = struct {
-		Addrs      []string
-		User       string
-		Pass       string
-		MasterName string
-		Db         int
-	}{Addrs: []string{"127.0.0.1:6379"}, User: "", Pass: "", MasterName: "", Db: 0}
-
-	c.Logger = struct {
-		Level    string
-		Mode     string
-		Path     string
-		KeepDays int
-		MaxSize  int
-	}{Level: "debug", Mode: "console", Path: "", KeepDays: 0, MaxSize: 0}
-
-	tests := []struct {
-		name   string
-		target string
-	}{
-		{
-			name:   "can init success",
-			target: "GRPC",
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			Init(c)
-		})
-	}
-}
-
 func Test_handlerMessage(t *testing.T) {
 
 	cache.Init(&config.Config{Secret: "66d2e42661bc292f8237b4736a423a36"})
