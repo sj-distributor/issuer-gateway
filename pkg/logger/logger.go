@@ -6,4 +6,6 @@ import (
 
 func Init(conf logx.LogConf) {
 	logx.MustSetup(conf)
+
+	// todo:  the log written to ...
 }

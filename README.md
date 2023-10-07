@@ -12,7 +12,6 @@ A High Performance Gateway with Certificate Issuance and Flexible Proxy
 - Ensures certificates remain valid and up to date
 - Dynamic service pointing, no need to restart
 
-
 ### Features
 - [ ] Limiter (concurrent control)
 - [ ] Load Balancing
