@@ -26,26 +26,30 @@ const OperationCell: FC<{
         alignItems: "center",
       }}
     >
-      <LoadingButton
-        size="small"
-        onClick={() => onApplyCert(cert.id)}
-        endIcon={<PlaylistAddSharpIcon />}
-        loading={false}
-        loadingPosition="end"
-        variant="contained"
-      >
-        申请证书
-      </LoadingButton>
-      <LoadingButton
-        size="small"
-        onClick={() => {}}
-        endIcon={<Refresh />}
-        loading={false}
-        loadingPosition="end"
-        variant="contained"
-      >
-        重新申请证书
-      </LoadingButton>
+      {cert.expire <= 0 && (
+        <LoadingButton
+          size="small"
+          onClick={() => onApplyCert(cert.id)}
+          endIcon={<PlaylistAddSharpIcon />}
+          loading={false}
+          loadingPosition="end"
+          variant="contained"
+        >
+          申请证书
+        </LoadingButton>
+      )}
+      {cert.expire > 0 && (
+        <LoadingButton
+          size="small"
+          onClick={() => {}}
+          endIcon={<Refresh />}
+          loading={false}
+          loadingPosition="end"
+          variant="contained"
+        >
+          重新申请
+        </LoadingButton>
+      )}
       <LoadingButton
         size="small"
         onClick={() => {}}
