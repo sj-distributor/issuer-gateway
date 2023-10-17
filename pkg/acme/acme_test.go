@@ -4,12 +4,15 @@ import (
 	"github.com/go-acme/lego/v4/acme"
 	"github.com/go-jose/go-jose/v3/json"
 	"github.com/go-playground/assert/v2"
+	"sync"
 	"testing"
 )
 
 func TestReqCertificate(t *testing.T) {
 
-	acmeProvider := &AcmeProvider{}
+	acmeProvider := &AcmeProvider{
+		MemoryCache: &sync.Map{},
+	}
 
 	type args struct {
 		CADirURL     string

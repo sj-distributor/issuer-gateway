@@ -9,6 +9,7 @@ import (
 	"github.com/pygzfei/issuer-gateway/pkg/driver"
 	"github.com/zeromicro/go-zero/rest"
 	"gorm.io/gorm"
+	"sync"
 )
 
 type ServiceContext struct {
@@ -25,6 +26,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Authorization: middleware.NewAuthorizationMiddleware(&c).Handle,
 		DB:            database.DB(),
 		SyncProvider:  syncx.Init(&c),
-		AcmeProvider:  &acme.AcmeProvider{},
+		AcmeProvider: &acme.AcmeProvider{
+			MemoryCache: &sync.Map{},
+		},
 	}
 }

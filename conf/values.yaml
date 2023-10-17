@@ -36,7 +36,7 @@ Issuer:
     # Redis
     # Cron
     Type: "Cron"
-    Cron: "0 1 * * *"
+    Cron: "40 23 * * *" # UTC Time
 
   DevServer:
     Enabled: true
