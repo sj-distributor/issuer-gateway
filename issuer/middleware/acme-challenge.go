@@ -35,6 +35,12 @@ func AcceptAcmeChallenge(serverCtx *svc.ServiceContext) rest.Route {
 			)
 
 			value, ok := provider.MemoryCache.Load(originalDomain)
+			
+			logx.Info(
+				logx.Field("value", value),
+				logx.Field("ok", ok),
+			)
+
 			if ok {
 				domainMapping := value.(providers.DomainMapping)
 
