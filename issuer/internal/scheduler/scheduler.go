@@ -34,7 +34,7 @@ func NewScheduler(c *config.Config, syncProvider driver.IProvider, acmeProvider 
 		db := database.DB()
 
 		var certs []entity.Cert
-		err := db.Where("expire <= ?", time.Now().UTC().Unix()).Find(&certs).Order("id").Error
+		err := db.Where("expire <= ?", time.Now().UTC().Unix()).Find(&certs).Where("certificate != ''").Order("id").Error
 		if err != nil {
 			logx.Errorf("Failed to scan expired certificates: [%s]", err)
 			return
