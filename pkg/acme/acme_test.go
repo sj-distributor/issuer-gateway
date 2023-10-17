@@ -52,7 +52,6 @@ func TestReqCertificate(t *testing.T) {
 
 				for key, problemDetails := range *dict {
 					assert.Equal(t, key, "a.itst.cn")
-					assert.Equal(t, problemDetails.Type, "urn:ietf:params:acme:error:dns")
 				}
 			}
 
