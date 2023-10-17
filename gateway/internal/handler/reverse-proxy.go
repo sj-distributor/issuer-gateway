@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -77,7 +76,7 @@ func AcceptChallenge(c *config.Config) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		r.Header.Set("X-Forwarded-Host", r.Host)
 
-		target, err := url.Parse(fmt.Sprintf("%s:10086", c.Gateway.IssuerService))
+		target, err := url.Parse(c.Gateway.IssuerService)
 
 		if err != nil {
 			logx.Errorw("AcceptChallenge err", logx.Field("error", err))
