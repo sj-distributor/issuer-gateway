@@ -50,7 +50,7 @@ func TestReqCertificate(t *testing.T) {
 					t.Errorf("request certificate is err: [%s]", err)
 				}
 
-				for key, problemDetails := range *dict {
+				for key, _ := range *dict {
 					assert.Equal(t, key, "a.itst.cn")
 				}
 			}
