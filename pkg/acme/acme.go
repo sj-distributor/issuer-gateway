@@ -4,9 +4,10 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"fmt"
+	"github.com/pygzfei/issuer-gateway/pkg/acme/providers"
+	"sync"
 
 	"github.com/go-acme/lego/v4/certificate"
-	"github.com/go-acme/lego/v4/challenge/http01"
 	"github.com/go-acme/lego/v4/lego"
 	"github.com/go-acme/lego/v4/registration"
 )
@@ -16,6 +17,7 @@ type IAcme interface {
 }
 
 type AcmeProvider struct {
+	MemoryCache *sync.Map
 }
 
 func (a *AcmeProvider) ReqCertificate(CADirURL, accountEmail string, domains ...string) (*certificate.Resource, error) {
@@ -39,7 +41,7 @@ func (a *AcmeProvider) ReqCertificate(CADirURL, accountEmail string, domains ...
 	}
 
 	// 设置http01验证
-	err = client.Challenge.SetHTTP01Provider(http01.NewProviderServer("", "10086"))
+	err = client.Challenge.SetHTTP01Provider(providers.NewHttp01ProviderServer(a.MemoryCache))
 
 	if err != nil {
 		return nil, err

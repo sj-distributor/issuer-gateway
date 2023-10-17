@@ -14,10 +14,10 @@ service issuer-api {
 	post /login (UserLoginReq) returns (UserLoginResp)
 }
 
-// cert
+// issuer
 @server(
 	prefix: /api
-	group: cert
+	group: issuer
 	middleware: Authorization
 )
 service issuer-api {

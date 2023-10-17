@@ -44,6 +44,8 @@ func Run(conPath string) {
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
 
+	server.AddRoute(middleware.AcceptAcmeChallenge(ctx))
+
 	scheduler.NewScheduler(&c, ctx.SyncProvider, ctx.AcmeProvider)
 
 	logx.Infof("Starting server at %s:%d...", c.Issuer.Host, c.Issuer.Port)

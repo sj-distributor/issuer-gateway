@@ -75,6 +75,8 @@ func ReverseProxyOrRedirect(w http.ResponseWriter, r *http.Request) {
 func AcceptChallenge(c *config.Config) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		r.Header.Set("X-Forwarded-Host", r.Host)
+
 		target, err := url.Parse(fmt.Sprintf("%s:10086", c.Gateway.IssuerService))
 
 		if err != nil {
